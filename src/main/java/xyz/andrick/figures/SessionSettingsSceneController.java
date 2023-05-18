@@ -1,7 +1,5 @@
 package xyz.andrick.figures;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,16 +10,14 @@ import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import net.synedra.validatorfx.Validator;
-//import org.apache.commons.lang3.math.NumberUtils;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 public class SessionSettingsSceneController {
     private Stage stage;
-    private Validator validator = new Validator();
+    private final Validator validator = new Validator();
 
 
     @FXML
@@ -94,14 +90,6 @@ public class SessionSettingsSceneController {
                 .decorates(spinner)
                 .immediate();
 
-        ChangeListener<Double> Listener = new ChangeListener() {
-            @Override
-            public void changed(ObservableValue observableValue, Object o, Object t1) {
-                if(t1 == null)
-                    spinner.getValueFactory().setValue(0d);
-            }
-        };
-
         spinner.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue.toLowerCase().matches("^(\\d+)*.?\\d*$") || !isDouble(newValue)){
                 spinner.getEditor().setText(oldValue);
@@ -110,13 +98,8 @@ public class SessionSettingsSceneController {
             }
             if(newValue.equals(".")){
                 spinner.getEditor().setText("0.");
-                return;
             }
         });
-    }
-
-    public void doubleSpinnerTextSanitiser(ObservableValue<? extends String> observable, String oldValue, String newValue){
-
     }
 
     private void directoryValidation()
@@ -133,13 +116,6 @@ public class SessionSettingsSceneController {
                 .decorates(imageDirectoryTextField)
                 .immediate();
 
-//        ChangeListener<String> directoryListener = new ChangeListener<String>() {
-//            @Override
-//            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-//                onImageDirectoryChanged(t1);
-//            }
-//        };
-
         imageDirectoryTextField.textProperty().addListener((observableValue, s, t1) -> onImageDirectoryChanged(t1));
         onImageDirectoryChanged(imageDirectoryTextField.getText());
     }
@@ -150,11 +126,17 @@ public class SessionSettingsSceneController {
         {
             return;
         }
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("session-image.fxml"));
         Parent root = loader.load();
 
         ActiveSessionController SessionController = loader.getController();
 
+
+        Scene scene = new Scene(root);
+
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
         SessionSettings settings = new SessionSettings(
                 imageDurationSpinner.getValue(),
                 breakDurationSpinner.getValue(),
@@ -163,14 +145,8 @@ public class SessionSettingsSceneController {
                 getImagesInDirectory(imageDirectoryTextField.getText()),
                 ((Node)event.getSource()).getScene()
         );
-
-
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
         SessionController.initialiseSettings(settings);
-
+        stage.show();
     }
 
     private boolean allFieldsValid()
@@ -181,22 +157,16 @@ public class SessionSettingsSceneController {
         boolean validBreak = isNaturalNumber(imagesBetweenBreaksSpinner.getEditor().getText());
 
         boolean all = validDirectory && validImageDuration && validBreakDuration &&validBreak;
-        
-        if(all)
-            startSessionButton.setDisable(false);
-        else
-            startSessionButton.setDisable(true);
+
+        startSessionButton.setDisable(!all);
 
         return validDirectory && validImageDuration && validBreakDuration &&validBreak;
     }
 
     private boolean isNaturalNumber( String number) {
         try {
-            Integer value = Integer.parseInt(number);
-            if(value == null || value<1 )
-                return false;
-
-            return true;
+            int value = Integer.parseInt(number);
+            return value >= 1;
         } catch (NumberFormatException e) {
             return false;
         }
@@ -204,9 +174,8 @@ public class SessionSettingsSceneController {
 
     private boolean isDouble(String number) {
         try {
-            Double value = Double.parseDouble(number);
-            //noinspection MalformedFormatString
-            return !value.isNaN();
+            double value = Double.parseDouble(number);
+            return !Double.isNaN(value);
         } catch (RuntimeException e) {
             return false;
         }
@@ -217,9 +186,6 @@ public class SessionSettingsSceneController {
         if(!doesDirectoryExist(newDirectory))
         {
             filesFoundLabel.setText("Directory is invalid");
-            filesFoundLabel.getStylesheets().removeIf(Predicate.isEqual("style for green text"));
-            if( !filesFoundLabel.getStylesheets().contains("some style for red text"));
-                filesFoundLabel.getStylesheets().add("some style for red text");
             return;
         }
         String imagesFoundString = "%d images found in directory".formatted(getImagesInDirectory(newDirectory).length);
@@ -248,16 +214,14 @@ public class SessionSettingsSceneController {
         if(!Directory.exists())
             return new String[]{};
 
-        String[] fileList = Directory.list(new FilenameFilter() {
+        return Directory.list(new FilenameFilter() {
             static final String regex = "([^\\s]+(\\.(?i)(jpg|png|gif|bmp))$)";
-            Pattern pattern = Pattern.compile(regex);
+            final Pattern pattern = Pattern.compile(regex);
 
             @Override
             public boolean accept(File dir, String name) {
                 return pattern.matcher(name.toLowerCase()).find();
             }
         });
-
-        return fileList;
     }
 }
