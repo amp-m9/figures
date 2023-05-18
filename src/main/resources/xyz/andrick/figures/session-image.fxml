@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.gluonhq.charm.glisten.control.Icon?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="baseAnchorPane" prefHeight="584.0" prefWidth="759.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.andrick.figures.ActiveSessionController">
+   <children>
+      <AnchorPane fx:id="imageAnchorPane" style="-fx-background-color: #2a2d47;" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ImageView fx:id="imageView" fitHeight="36.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </AnchorPane>
+      <ToolBar prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <items>
+          <Button fx:id="quitButton" mnemonicParsing="false" text="Quit">
+               <graphic>
+                  <Icon content="HELP_OUTLINE" />
+               </graphic>
+            </Button>
+            <Button fx:id="playPauseButton" mnemonicParsing="false" text="Pause">
+               <graphic>
+                  <Icon content="HELP_OUTLINE" />
+               </graphic>
+            </Button>
+            <Button fx:id="nextButton" mnemonicParsing="false" text="Next">
+               <graphic>
+                  <Icon content="HELP_OUTLINE" />
+               </graphic>
+            </Button>
+            <Button fx:id="previousButton" mnemonicParsing="false" text="Previous">
+               <graphic>
+                  <Icon content="HELP_OUTLINE" />
+               </graphic>
+            </Button>
+        </items>
+      </ToolBar>
+   </children>
+</AnchorPane>
