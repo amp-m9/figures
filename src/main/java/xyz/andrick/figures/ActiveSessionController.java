@@ -1,5 +1,6 @@
 package xyz.andrick.figures;
 
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -10,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Arc;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -24,8 +26,8 @@ public class ActiveSessionController {
     private final double maxZoom = 5;
     private int imageIndex = 0;
     private SessionSettings settings;
-    private Timer imageTimer;
     private ObservableTimer timer;
+    private SimpleDoubleProperty timerArcLength;
     @FXML
     AnchorPane imageAnchorPane;
     @FXML
@@ -40,10 +42,13 @@ public class ActiveSessionController {
     Button nextButton;
     @FXML
     Button previousButton;
-
+    @FXML
+    Arc timerArc;
     @FXML
     public void initialize()
     {
+        timerArcLength = new SimpleDoubleProperty(360.0f);
+        timerArc.lengthProperty().bind(timerArcLength);
         imageView.setPreserveRatio(true);
         imageView.fitHeightProperty().bind(imageAnchorPane.heightProperty());
         imageView.fitWidthProperty().bind(imageAnchorPane.widthProperty());
@@ -51,8 +56,8 @@ public class ActiveSessionController {
         imageAnchorPane.setOnMouseDragged(this::onMouseDragged);
         imageAnchorPane.setOnScroll(this::zoomOnScroll);
         quitButton.setOnAction(this::quitToSettings);
-        nextButton.setOnAction(event->nextImage());
-        previousButton.setOnAction(event -> previousImage());
+        nextButton.setOnAction(event -> {timer.restart(); nextImage();});
+        previousButton.setOnAction(event -> {timer.restart(); previousImage();});
     }
 
     public void initialiseSettings(SessionSettings _settings) {
@@ -76,6 +81,13 @@ public class ActiveSessionController {
             }
         });
 
+        timer.timeElapsedProperty().addListener((observableValue, number, t1) -> {
+            double fraction = (double) t1.intValue() /settings.ImageTimeMillis();
+            fraction = clamp(fraction, 0, 1);
+            int length = (int) (fraction*360);
+            timerArcLength.set(length);
+            System.out.println("%f".formatted(timerArc.getLength()));
+        });
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent windowEvent) {

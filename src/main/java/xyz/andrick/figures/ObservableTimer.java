@@ -58,7 +58,7 @@ public class ObservableTimer {
             return;
         }
         userTickFunction.run();
-//        updateClock();
+        timeElapsed.set(0);
         numCalls++;
         if(maxCalls.getValue()==-1)
             return;
@@ -67,7 +67,6 @@ public class ObservableTimer {
         {
             executorService.shutdownNow();
             running = false;
-            return;
         }
     }
 
@@ -82,12 +81,23 @@ public class ObservableTimer {
     }
 
     public void stop(){
+        running = false;
         executorService.shutdownNow();
         timerService.shutdownNow();
-        timeElapsed = new SimpleLongProperty(0);
+        timeElapsed.set(0);
     }
+
+    public void restart(){
+        stop();
+        start();
+    }
+
     public void resume(){
         start();
+    }
+
+    public SimpleLongProperty timeElapsedProperty() {
+        return timeElapsed;
     }
 
     public double getTimeElapsed() {

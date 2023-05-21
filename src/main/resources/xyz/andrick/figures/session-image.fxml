@@ -4,12 +4,14 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Arc?>
 
 <AnchorPane fx:id="baseAnchorPane" prefHeight="584.0" prefWidth="759.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.andrick.figures.ActiveSessionController">
    <children>
       <AnchorPane fx:id="imageAnchorPane" style="-fx-background-color: #2a2d47;" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <ImageView fx:id="imageView" fitHeight="36.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" />
+            <Arc fx:id="timerArc" fill="DODGERBLUE" layoutX="730.0" layoutY="36.0" length="360.0" radiusX="20.0" radiusY="20.0" startAngle="90.0" stroke="TRANSPARENT" strokeType="INSIDE" type="ROUND" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="16.0" />
          </children>
       </AnchorPane>
       <ToolBar prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
