@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.gluonhq.charm.glisten.control.Icon?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.ImageView?>
@@ -16,24 +15,12 @@
       <ToolBar prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <items>
           <Button fx:id="quitButton" mnemonicParsing="false" text="Quit">
-               <graphic>
-                  <Icon content="HELP_OUTLINE" />
-               </graphic>
             </Button>
             <Button fx:id="playPauseButton" mnemonicParsing="false" text="Pause">
-               <graphic>
-                  <Icon content="HELP_OUTLINE" />
-               </graphic>
             </Button>
             <Button fx:id="nextButton" mnemonicParsing="false" text="Next">
-               <graphic>
-                  <Icon content="HELP_OUTLINE" />
-               </graphic>
             </Button>
             <Button fx:id="previousButton" mnemonicParsing="false" text="Previous">
-               <graphic>
-                  <Icon content="HELP_OUTLINE" />
-               </graphic>
             </Button>
         </items>
       </ToolBar>
