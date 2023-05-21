@@ -138,8 +138,8 @@ public class SessionSettingsSceneController {
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         SessionSettings settings = new SessionSettings(
-                imageDurationSpinner.getValue(),
-                breakDurationSpinner.getValue(),
+                (long) Math.floor(imageDurationSpinner.getValue()*1000),
+                (long) Math.floor(breakDurationSpinner.getValue()*1000),
                 imageDirectoryTextField.getText(),
                 imagesBetweenBreaksSpinner.getValue(),
                 getImagesInDirectory(imageDirectoryTextField.getText()),
