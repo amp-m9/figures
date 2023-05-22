@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import net.synedra.validatorfx.Validator;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -36,11 +37,12 @@ public class SessionSettingsSceneController {
     @FXML
     private ToggleGroup imageTimeToggleGroup;
     @FXML
-    private ToggleGroup breakTimeToggleGroup;
+    private ToggleButton breakMinutesToggle;
+    @FXML
+    private ToggleButton imageMinutesToggle;
 
     @FXML
-    public void initialize()
-    {
+    public void initialize() {
         directoryValidation();
         setUpDoubleSpinner(imageDurationSpinner);
         setUpDoubleSpinner(breakDurationSpinner);
@@ -48,67 +50,48 @@ public class SessionSettingsSceneController {
     }
 
     private void setUpIntegerSpinner(Spinner<Integer> spinner) {
-        spinner.setValueFactory( new SpinnerValueFactory.IntegerSpinnerValueFactory(0,Integer.MAX_VALUE,10, 1));
+        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 10, 1));
 
         validator.createCheck()
                 .dependsOn("Duration", spinner.getEditor().textProperty())
                 .withMethod(c -> {
                     String duration = c.get("Duration");
-                    if(!isNaturalNumber(duration))
-                        c.error("Number is invalid\n - Must be a integer > 1");
+                    if (!isNaturalNumber(duration))
+                        c.error("Number is invalid\n - Must be a whole number greater than 1");
                     allFieldsValid();
                 })
                 .decorates(spinner)
                 .immediate();
-
-        spinner.valueProperty().addListener((observableValue, integer, t1) ->{
-            if(t1 == null)
-                spinner.getValueFactory().setValue(0);
-        });
-
-        spinner.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
-            if(!newValue.matches("\\d*")){
-                spinner.getEditor().setText("1");
-            }
-        });
-
     }
 
 
-    private void setUpDoubleSpinner(Spinner<Double> spinner)
-    {
-        spinner.setValueFactory( new SpinnerValueFactory.DoubleSpinnerValueFactory(0,Double.MAX_VALUE,30, 5));
+    private void setUpDoubleSpinner(Spinner<Double> spinner) {
+        spinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Double.MAX_VALUE, 30, 5));
 
         validator.createCheck()
                 .dependsOn("Duration", spinner.getEditor().textProperty())
                 .withMethod(c -> {
                     String duration = c.get("Duration");
-                    if(!isDouble(duration))
-                        c.error("Number is invalid");
+                    if (!isValidDouble(duration))
+                        c.error("Entry is invalid\n - Must be a number >0");
+
                     allFieldsValid();
                 })
                 .decorates(spinner)
                 .immediate();
 
         spinner.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
-            if(!newValue.toLowerCase().matches("^(\\d+)*.?\\d*$") || !isDouble(newValue)){
-                spinner.getEditor().setText(oldValue);
-                allFieldsValid();
-                return;
-            }
-            if(newValue.equals(".")){
+            if (newValue.equals(".")) {
                 spinner.getEditor().setText("0.");
             }
         });
     }
 
-    private void directoryValidation()
-    {
+    private void directoryValidation() {
         validator.createCheck()
                 .dependsOn("DirectoryField", imageDirectoryTextField.textProperty())
                 .withMethod(c -> {
-                    if(!doesDirectoryExist(c.get("DirectoryField")))
-                    {
+                    if (!doesDirectoryExist(c.get("DirectoryField"))) {
                         c.error("Directory is invalid.");
                     }
                     allFieldsValid();
@@ -122,8 +105,7 @@ public class SessionSettingsSceneController {
 
 
     public void onStartPressed(ActionEvent event) throws IOException {
-        if(!allFieldsValid())
-        {
+        if (!allFieldsValid()) {
             return;
         }
 
@@ -137,33 +119,42 @@ public class SessionSettingsSceneController {
 
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
+
+        long breakDurationSpinnerValue = (long) Math.floor(breakDurationSpinner.getValue() * 1000);
+        if(breakMinutesToggle.isSelected())
+            breakDurationSpinnerValue = breakDurationSpinnerValue*60;
+
+        long imageDurationSpinnerValue = (long) Math.floor(imageDurationSpinner.getValue() * 1000);
+        if(imageMinutesToggle.isSelected())
+            imageDurationSpinnerValue = imageDurationSpinnerValue*60;
+
         SessionSettings settings = new SessionSettings(
-                imageDurationSpinner.getValue(),
-                breakDurationSpinner.getValue(),
+                imageDurationSpinnerValue,
+                breakDurationSpinnerValue,
                 imageDirectoryTextField.getText(),
                 imagesBetweenBreaksSpinner.getValue(),
                 getImagesInDirectory(imageDirectoryTextField.getText()),
-                ((Node)event.getSource()).getScene()
+                ((Node) event.getSource()).getScene(),
+                stage
         );
-        SessionController.initialiseSettings(settings);
+        SessionController.setupSession(settings);
         stage.show();
     }
 
-    private boolean allFieldsValid()
-    {
+    private boolean allFieldsValid() {
         boolean validDirectory = doesDirectoryExist(imageDirectoryTextField.getText());
         boolean validImageDuration = isDouble(imageDurationSpinner.getEditor().getText());
         boolean validBreakDuration = isDouble(breakDurationSpinner.getEditor().getText());
         boolean validBreak = isNaturalNumber(imagesBetweenBreaksSpinner.getEditor().getText());
 
-        boolean all = validDirectory && validImageDuration && validBreakDuration &&validBreak;
+        boolean all = validDirectory && validImageDuration && validBreakDuration && validBreak;
 
         startSessionButton.setDisable(!all);
 
-        return validDirectory && validImageDuration && validBreakDuration &&validBreak;
+        return validDirectory && validImageDuration && validBreakDuration && validBreak;
     }
 
-    private boolean isNaturalNumber( String number) {
+    private boolean isNaturalNumber(String number) {
         try {
             int value = Integer.parseInt(number);
             return value >= 1;
@@ -172,6 +163,14 @@ public class SessionSettingsSceneController {
         }
     }
 
+    private boolean isValidDouble(String number) {
+        try{
+            double value = Double.parseDouble(number);
+            return value>0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
     private boolean isDouble(String number) {
         try {
             double value = Double.parseDouble(number);
@@ -181,10 +180,8 @@ public class SessionSettingsSceneController {
         }
     }
 
-    public void onImageDirectoryChanged(String newDirectory)
-    {
-        if(!doesDirectoryExist(newDirectory))
-        {
+    public void onImageDirectoryChanged(String newDirectory) {
+        if (!doesDirectoryExist(newDirectory)) {
             filesFoundLabel.setText("Directory is invalid");
             return;
         }
@@ -193,25 +190,27 @@ public class SessionSettingsSceneController {
 
     }
 
-    public void onBrowseButtonPress(ActionEvent event)
-    {
+    public void onBrowseButtonPress(ActionEvent event) {
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File selectedDirectory = directoryChooser.showDialog(stage);
 
-        if(selectedDirectory == null)
+        if (selectedDirectory == null)
             return;
         imageDirectoryTextField.setText(selectedDirectory.getAbsolutePath());
     }
 
 
-    private boolean doesDirectoryExist(String directory) { return new File(directory).exists(); }
+    private boolean doesDirectoryExist(String directory) {
+        return new File(directory).exists();
+    }
 
-    private String[] getImagesInDirectory(String folder){ return getImagesInDirectory(new File(folder)); }
+    private String[] getImagesInDirectory(String folder) {
+        return getImagesInDirectory(new File(folder));
+    }
 
-    private String[] getImagesInDirectory(File Directory)
-    {
-        if(!Directory.exists())
+    private String[] getImagesInDirectory(File Directory) {
+        if (!Directory.exists())
             return new String[]{};
 
         return Directory.list(new FilenameFilter() {
