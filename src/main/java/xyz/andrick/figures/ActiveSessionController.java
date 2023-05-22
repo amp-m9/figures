@@ -2,10 +2,7 @@ package xyz.andrick.figures;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -16,7 +13,6 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Arc;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -29,7 +25,6 @@ public class ActiveSessionController {
     private SessionSettings settings;
     private ObservableTimer timer;
     private SimpleDoubleProperty timerArcLength;
-    private SimpleStringProperty breaktimeTextProperty;
 
     private ChangeListener<Number> timeListener;
     @FXML
@@ -59,8 +54,6 @@ public class ActiveSessionController {
     @FXML
     public void initialize()
     {
-        breaktimeTextProperty = new SimpleStringProperty();
-//        breakTimeLabel.textProperty().bind(breaktimeTextProperty);
         breakAnchorPane.setVisible(false);
         timerArcLength = new SimpleDoubleProperty(360.0f);
         timerArc.lengthProperty().bind(timerArcLength);
@@ -97,28 +90,15 @@ public class ActiveSessionController {
 
         timeListener = createSessionTimerListener();
         timer.timeElapsedProperty().addListener(timeListener);
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent windowEvent) {
-                timer.killAll();
-            }
-        });
+        stage.setOnCloseRequest(windowEvent -> timer.killAll());
     }
 
     private ChangeListener<Number> createSessionTimerListener() {
-        return new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue observableValue, Number o, Number t1) {
-                double fraction = (double) t1.intValue() /settings.imageTimeMillis();
-                fraction = clamp(fraction, 0, 1);
-                int length = (int) (fraction*360);
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        timerArcLength.set(length);
-                    }
-                });
-            }
+        return (observableValue, o, t1) -> {
+            double fraction = (double) t1.intValue() /settings.imageTimeMillis();
+            fraction = clamp(fraction, 0, 1);
+            int length = (int) (fraction*360);
+            Platform.runLater(() -> timerArcLength.set(length));
         };
     }
 
@@ -133,12 +113,12 @@ public class ActiveSessionController {
             beginBreak();
 
         imageIndex++;
-        imageIndex = clamp(imageIndex, 0, settings.imageSources().length);
+        imageIndex = clampFromZero(imageIndex, settings.imageSources().length);
         displayImage(imageIndex);
     }
     public void previousImage(){
         imageIndex--;
-        imageIndex = clamp(imageIndex, 0, settings.imageSources().length);
+        imageIndex = clampFromZero(imageIndex, settings.imageSources().length);
         displayImage(imageIndex);
 
     }
@@ -198,7 +178,7 @@ public class ActiveSessionController {
     }
 
     private void onTick() {
-        System.out.println("Time elapsed: %f".formatted(timer.getTimeElapsed()/1000));
+        System.out.printf("Time elapsed: %f%n", timer.getTimeElapsed()/1000);
         nextImage();
     }
 
@@ -214,20 +194,12 @@ public class ActiveSessionController {
     }
 
     private ChangeListener<Number> createBreakTimerListener(){
-        return new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-                int SecondsElapsed = (int) t1.intValue()/1000;
-                int breakInSeconds = (int) (settings.breakTimeMillis()/1000);
-                int minutesLeft = (int) Math.floor((breakInSeconds-SecondsElapsed)/60);
-                int secondsLeft = (breakInSeconds-SecondsElapsed)%60;
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        breakTimeLabel.setText("Time remaining: %02d:%02d".formatted(minutesLeft, secondsLeft));
-                    }
-                });
-            }
+        return (observableValue, number, t1) -> {
+            int SecondsElapsed = t1.intValue()/1000;
+            int breakInSeconds = (int) (settings.breakTimeMillis()/1000);
+            int minutesLeft = (int) Math.floor((double) (breakInSeconds - SecondsElapsed) /60);
+            int secondsLeft = (breakInSeconds-SecondsElapsed)%60;
+            Platform.runLater(() -> breakTimeLabel.setText("Time remaining: %02d:%02d".formatted(minutesLeft, secondsLeft)));
         };
     }
 
@@ -314,5 +286,5 @@ public class ActiveSessionController {
         imageView.setY(imageView.getY() + mouseTranslateY);
     }
     private static double clamp(double val, double min, double max) { return  Math.max(min, Math.min(max, val)); }
-    private static int clamp(int val, int min, int max) { return  Math.max(min, Math.min(max, val)); }
+    private static int clampFromZero(int val, int max) { return  Math.max(0, Math.min(max, val)); }
 }
