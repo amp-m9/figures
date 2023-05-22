@@ -51,10 +51,12 @@ public class ActiveSessionController {
     Label breakTimeLabel;
     @FXML
     Arc timerArc;
+
     @FXML
-    public void initialize()
-    {
+    public void initialize() {
         breakAnchorPane.setVisible(false);
+        breakQuitButton.setOnAction(event -> quitToSettings());
+        breakResumeButton.setOnAction(event -> resumeSession());
         timerArcLength = new SimpleDoubleProperty(360.0f);
         timerArc.lengthProperty().bind(timerArcLength);
         imageView.setPreserveRatio(true);
@@ -64,8 +66,15 @@ public class ActiveSessionController {
         imageAnchorPane.setOnMouseDragged(this::onMouseDragged);
         imageAnchorPane.setOnScroll(this::zoomOnScroll);
         quitButton.setOnAction(event -> quitToSettings());
-        nextButton.setOnAction(event -> {timer.restart(); nextImage();});
-        previousButton.setOnAction(event -> {timer.restart(); previousImage();});
+        nextButton.setOnAction(event -> {
+            timer.restart();
+            nextImage();
+        });
+        previousButton.setOnAction(event -> {
+            timer.restart();
+            previousImage();
+        });
+
     }
 
     public void setupSession(SessionSettings _settings) {
@@ -76,14 +85,13 @@ public class ActiveSessionController {
     }
 
     private void setUpTimers() {
-        Stage stage = (Stage)(imageView.getScene().getWindow());
+        Stage stage = (Stage) (imageView.getScene().getWindow());
         timer = new ObservableTimer(settings.imageTimeMillis(), -1, this::onTick);
         timer.start();
         playPauseButton.setOnAction(event -> {
-            if(timer.isRunning()) {
+            if (timer.isRunning()) {
                 timer.pause();
-            }
-            else {
+            } else {
                 timer.resume();
             }
         });
@@ -95,38 +103,40 @@ public class ActiveSessionController {
 
     private ChangeListener<Number> createSessionTimerListener() {
         return (observableValue, o, t1) -> {
-            double fraction = (double) t1.intValue() /settings.imageTimeMillis();
+            double fraction = (double) t1.intValue() / settings.imageTimeMillis();
             fraction = clamp(fraction, 0, 1);
-            int length = (int) (fraction*360);
+            int length = (int) (fraction * 360);
             Platform.runLater(() -> timerArcLength.set(length));
         };
     }
 
-    public void nextImage(){
-        int endOfSources = settings.imageSources().length-1;
-        if (imageIndex==endOfSources){
+    public void nextImage() {
+        int endOfSources = settings.imageSources().length - 1;
+        if (imageIndex == endOfSources) {
             Platform.runLater(this::quitToSettings);
             return;
         }
 
-        if (imageIndex>0 && (imageIndex+1)%settings.picturesBetweenBreaks()==0)
+        if (imageIndex > 0 && (imageIndex + 1) % settings.picturesBetweenBreaks() == 0)
             beginBreak();
 
         imageIndex++;
         imageIndex = clampFromZero(imageIndex, settings.imageSources().length);
         displayImage(imageIndex);
     }
-    public void previousImage(){
+
+    public void previousImage() {
         imageIndex--;
         imageIndex = clampFromZero(imageIndex, settings.imageSources().length);
         displayImage(imageIndex);
 
     }
+
     public void displayImage(int index) {
 
-        String fileString = settings.directory() + '/' + settings.imageSources()[index%settings.imageSources().length];
+        String fileString = settings.directory() + '/' + settings.imageSources()[index % settings.imageSources().length];
         File imageFile = new File(fileString);
-        if(!imageFile.exists()){
+        if (!imageFile.exists()) {
             displayImageError(fileString);
             return;
         }
@@ -140,12 +150,12 @@ public class ActiveSessionController {
         }
     }
 
-    public void onMousePressed(MouseEvent mouseEvent){
-            startDragX = mouseEvent.getSceneX();
-            startDragY = mouseEvent.getSceneY();
+    public void onMousePressed(MouseEvent mouseEvent) {
+        startDragX = mouseEvent.getSceneX();
+        startDragY = mouseEvent.getSceneY();
     }
 
-    public void onMouseDragged(MouseEvent mouseEvent){
+    public void onMouseDragged(MouseEvent mouseEvent) {
         imageView.setX(imageView.getX() + (mouseEvent.getSceneX() - startDragX));
         imageView.setY(imageView.getY() + (mouseEvent.getSceneY() - startDragY));
         KeepImageInFrame();
@@ -153,22 +163,22 @@ public class ActiveSessionController {
         startDragY = mouseEvent.getSceneY();
     }
 
-    public void zoomOnScroll(ScrollEvent scrollEvent){
-        Integer direction = (int)(scrollEvent.getDeltaY());
-        if(direction == 0) {
+    public void zoomOnScroll(ScrollEvent scrollEvent) {
+        Integer direction = (int) (scrollEvent.getDeltaY());
+        if (direction == 0) {
             return;
         }
 
         direction = direction.compareTo(0);
-        if ((direction>0 && imageView.getScaleX()>=maxZoom) || (direction<0 && imageView.getScaleY()<=0)) {
+        if ((direction > 0 && imageView.getScaleX() >= maxZoom) || (direction < 0 && imageView.getScaleY() <= 0)) {
             return;
         }
 
         double scaleFactor = (float) (direction * .05);
-        double newScale = clamp( (imageView.getScaleX()) + scaleFactor, 1, maxZoom);
+        double newScale = clamp((imageView.getScaleX()) + scaleFactor, 1, maxZoom);
 
         double TargetCursorDeltaX = calculateMouseXAfterZoom(scrollEvent, newScale);
-        double TargetMouseDeltaY = calculateMouseYAfterZoom(scrollEvent,newScale);
+        double TargetMouseDeltaY = calculateMouseYAfterZoom(scrollEvent, newScale);
 
         imageView.setScaleX(newScale);
         imageView.setScaleY(newScale);
@@ -178,7 +188,7 @@ public class ActiveSessionController {
     }
 
     private void onTick() {
-        System.out.printf("Time elapsed: %f%n", timer.getTimeElapsed()/1000);
+        System.out.printf("Time elapsed: %f%n", timer.getTimeElapsed() / 1000);
         nextImage();
     }
 
@@ -193,17 +203,17 @@ public class ActiveSessionController {
         timer.start();
     }
 
-    private ChangeListener<Number> createBreakTimerListener(){
+    private ChangeListener<Number> createBreakTimerListener() {
         return (observableValue, number, t1) -> {
-            int SecondsElapsed = t1.intValue()/1000;
-            int breakInSeconds = (int) (settings.breakTimeMillis()/1000);
-            int minutesLeft = (int) Math.floor((double) (breakInSeconds - SecondsElapsed) /60);
-            int secondsLeft = (breakInSeconds-SecondsElapsed)%60;
+            int SecondsElapsed = t1.intValue() / 1000;
+            int breakInSeconds = (int) (settings.breakTimeMillis() / 1000);
+            int minutesLeft = (int) Math.floor((double) (breakInSeconds - SecondsElapsed) / 60);
+            int secondsLeft = (breakInSeconds - SecondsElapsed) % 60;
             Platform.runLater(() -> breakTimeLabel.setText("Time remaining: %02d:%02d".formatted(minutesLeft, secondsLeft)));
         };
     }
 
-    private void resumeSession(){
+    private void resumeSession() {
 //        nextImage();
         timer.stop();
         timer.setUserTickFunction(this::onTick);
@@ -214,6 +224,7 @@ public class ActiveSessionController {
         breakAnchorPane.setVisible(false);
         timer.start();
     }
+
     private void displayImageError(String fileString) {
         System.out.printf("Cannot display image %s%n", fileString);
     }
@@ -225,15 +236,14 @@ public class ActiveSessionController {
         stage.show();
     }
 
-    private void KeepImageInFrame()
-    {
+    private void KeepImageInFrame() {
         double imageHeight = imageView.getBoundsInParent().getHeight();
         double imageWidth = imageView.getBoundsInParent().getWidth();
 
-        double LowerBoundX = Math.max( (imageAnchorPane.getWidth()-imageWidth)/2, 0);
-        double UpperBoundX = Math.min( imageAnchorPane.getWidth(),  (imageAnchorPane.getWidth()+imageWidth)/2);
-        double LowerBoundY = Math.max( (imageAnchorPane.getHeight()-imageHeight)/2, 0);
-        double UpperBoundY = Math.min( imageAnchorPane.getHeight() , (imageAnchorPane.getHeight()+imageHeight)/2);
+        double LowerBoundX = Math.max((imageAnchorPane.getWidth() - imageWidth) / 2, 0);
+        double UpperBoundX = Math.min(imageAnchorPane.getWidth(), (imageAnchorPane.getWidth() + imageWidth) / 2);
+        double LowerBoundY = Math.max((imageAnchorPane.getHeight() - imageHeight) / 2, 0);
+        double UpperBoundY = Math.min(imageAnchorPane.getHeight(), (imageAnchorPane.getHeight() + imageHeight) / 2);
 
 
         double imageMinY = imageView.getBoundsInParent().getMinY(); // top
@@ -241,13 +251,21 @@ public class ActiveSessionController {
         double imageMinX = imageView.getBoundsInParent().getMinX(); // lhs
         double imageMaxX = imageView.getBoundsInParent().getMaxX(); // rhs
 
-        if(imageMinY>LowerBoundY){ imageView.setY(imageView.getY() - (imageMinY-LowerBoundY)); }
+        if (imageMinY > LowerBoundY) {
+            imageView.setY(imageView.getY() - (imageMinY - LowerBoundY));
+        }
 
-        if(imageMaxY<UpperBoundY){ imageView.setY(imageView.getY() + (UpperBoundY-imageMaxY)); }
+        if (imageMaxY < UpperBoundY) {
+            imageView.setY(imageView.getY() + (UpperBoundY - imageMaxY));
+        }
 
-        if(imageMinX>LowerBoundX){ imageView.setX(imageView.getX() - (imageMinX-LowerBoundX)); }
+        if (imageMinX > LowerBoundX) {
+            imageView.setX(imageView.getX() - (imageMinX - LowerBoundX));
+        }
 
-        if(imageMaxX<UpperBoundX){ imageView.setX(imageView.getX() + (UpperBoundX - imageMaxX)); }
+        if (imageMaxX < UpperBoundX) {
+            imageView.setX(imageView.getX() + (UpperBoundX - imageMaxX));
+        }
     }
 
     private void resetImage() {
@@ -259,32 +277,39 @@ public class ActiveSessionController {
         imageView.setScaleY(1);
     }
 
-    private double calculateMouseXAfterZoom(ScrollEvent scrollEvent, double scale){
+    private double calculateMouseXAfterZoom(ScrollEvent scrollEvent, double scale) {
         double imageWidth = imageView.getBoundsInParent().getMaxX() - imageView.getBoundsInParent().getMinX();
-        double imageCenterX = (imageView.getBoundsInParent().getMinX() + imageWidth/2);
+        double imageCenterX = (imageView.getBoundsInParent().getMinX() + imageWidth / 2);
         double mouseDeltaXFromCenter = scrollEvent.getX() - imageCenterX;
 
-        return mouseDeltaXFromCenter/imageView.getScaleX() * scale;
+        return mouseDeltaXFromCenter / imageView.getScaleX() * scale;
     }
 
-    private double calculateMouseYAfterZoom(ScrollEvent scrollEvent, double scale){
+    private double calculateMouseYAfterZoom(ScrollEvent scrollEvent, double scale) {
         double imageHeight = imageView.getBoundsInParent().getMaxY() - imageView.getBoundsInParent().getMinY();
-        double imageCenterY = (imageView.getBoundsInParent().getMinY() + imageHeight/2);
+        double imageCenterY = (imageView.getBoundsInParent().getMinY() + imageHeight / 2);
         double mouseDeltaYFromCenter = scrollEvent.getY() - imageCenterY;
 
-        return mouseDeltaYFromCenter/imageView.getScaleY() * scale;
+        return mouseDeltaYFromCenter / imageView.getScaleY() * scale;
     }
+
     private void adjustMouseDelta(ScrollEvent scrollEvent, double TargetMouseDeltaX, double TargetMouseDeltaY) {
         double ImageWidth = imageView.getBoundsInParent().getMaxX() - imageView.getBoundsInParent().getMinX();
-        double currentMouseDeltaX = scrollEvent.getX() - (imageView.getBoundsInParent().getMinX() + ImageWidth/2);
+        double currentMouseDeltaX = scrollEvent.getX() - (imageView.getBoundsInParent().getMinX() + ImageWidth / 2);
         double mouseTranslateX = currentMouseDeltaX - TargetMouseDeltaX;
         imageView.setX(imageView.getX() + mouseTranslateX);
 
         double ImageHeight = imageView.getBoundsInParent().getMaxY() - imageView.getBoundsInParent().getMinY();
-        double currentMouseDeltaY = scrollEvent.getY() - (imageView.getBoundsInParent().getMinY() + ImageHeight/2);
+        double currentMouseDeltaY = scrollEvent.getY() - (imageView.getBoundsInParent().getMinY() + ImageHeight / 2);
         double mouseTranslateY = currentMouseDeltaY - TargetMouseDeltaY;
         imageView.setY(imageView.getY() + mouseTranslateY);
     }
-    private static double clamp(double val, double min, double max) { return  Math.max(min, Math.min(max, val)); }
-    private static int clampFromZero(int val, int max) { return  Math.max(0, Math.min(max, val)); }
+
+    private static double clamp(double val, double min, double max) {
+        return Math.max(min, Math.min(max, val));
+    }
+
+    private static int clampFromZero(int val, int max) {
+        return Math.max(0, Math.min(max, val));
+    }
 }

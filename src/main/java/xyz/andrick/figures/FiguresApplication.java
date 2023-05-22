@@ -23,7 +23,6 @@ public class FiguresApplication extends Application {
 //        scene.getStylesheets().add(css);
 
         Scene scene = new Scene(root);
-        SessionSettingsSceneController sessionSettingsController = fxmlLoader.getController();
 
         primaryStage.setTitle("Figures: Create a session");
         primaryStage.setScene(scene);

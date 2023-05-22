@@ -139,6 +139,7 @@ public class SessionSettingsSceneController {
         );
         SessionController.setupSession(settings);
         stage.show();
+        stage.setTitle("Figures - Active session");
     }
 
     private boolean allFieldsValid() {
