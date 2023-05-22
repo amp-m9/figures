@@ -12,7 +12,6 @@ public class ObservableTimer {
     private volatile boolean running=false;
     ScheduledExecutorService executorService;
     ScheduledExecutorService timerService;
-    private long timerPrecision = 2;
     private Runnable userTickFunction;
     private SimpleLongProperty interval, precision;
     private SimpleLongProperty timeElapsed;
@@ -109,5 +108,13 @@ public class ObservableTimer {
     public void killAll() {
         executorService.shutdownNow();
         timerService.shutdownNow();
+    }
+
+    public void setUserTickFunction(Runnable userTickFunction) {
+        this.userTickFunction = userTickFunction;
+    }
+
+    public void setInterval(long interval) {
+        this.interval.set(interval);
     }
 }

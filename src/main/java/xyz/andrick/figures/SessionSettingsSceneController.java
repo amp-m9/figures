@@ -143,9 +143,10 @@ public class SessionSettingsSceneController {
                 imageDirectoryTextField.getText(),
                 imagesBetweenBreaksSpinner.getValue(),
                 getImagesInDirectory(imageDirectoryTextField.getText()),
-                ((Node)event.getSource()).getScene()
+                ((Node)event.getSource()).getScene(),
+                stage
         );
-        SessionController.initialiseSettings(settings);
+        SessionController.setupSession(settings);
         stage.show();
     }
 
