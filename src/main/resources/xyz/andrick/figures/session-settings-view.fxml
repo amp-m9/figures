@@ -72,7 +72,7 @@
                                     <Insets left="10.0" />
                                  </HBox.margin>
                               </ToggleButton>
-                              <ToggleButton mnemonicParsing="false" text="Minutes" toggleGroup="$imageTimeToggleGroup" />
+                              <ToggleButton mnemonicParsing="false" text="Minutes" toggleGroup="$imageTimeToggleGroup" fx:id="imageMinutesToggle"/>
                            </children>
                         </HBox>
                      </children>
@@ -112,7 +112,7 @@
                                           <ToggleGroup fx:id="breakTimeToggleGroup" />
                                        </toggleGroup>
                                     </ToggleButton>
-                                    <ToggleButton mnemonicParsing="false" text="Minutes">
+                                    <ToggleButton mnemonicParsing="false" text="Minutes" fx:id="breakMinutesToggle">
                                        <toggleGroup>
                                           <ToggleGroup fx:id="$breakTimeToggleGroup" />
                                        </toggleGroup>
