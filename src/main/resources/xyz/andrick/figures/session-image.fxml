@@ -10,7 +10,7 @@
 <?import javafx.scene.shape.Arc?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="baseAnchorPane" prefHeight="584.0" prefWidth="759.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.andrick.figures.ActiveSessionController">
+<AnchorPane fx:id="baseAnchorPane" prefHeight="584.0" prefWidth="759.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.andrick.figures.SessionSceneController">
    <children>
       <AnchorPane fx:id="imageAnchorPane" style="-fx-background-color: #2a2d47;" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>

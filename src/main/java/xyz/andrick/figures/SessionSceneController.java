@@ -18,7 +18,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 
 
-public class ActiveSessionController {
+public class SessionSceneController {
     private double startDragX, startDragY;
     private final double maxZoom = 5;
     private int imageIndex = 0;
@@ -64,8 +64,8 @@ public class ActiveSessionController {
         imageAnchorPane.setOnMouseDragged(this::onMouseDragged);
         imageAnchorPane.setOnScroll(this::zoomOnScroll);
         quitButton.setOnAction(event -> quitToSettings());
-        nextButton.setOnAction(event -> {timer.restart(); nextImage();});
-        previousButton.setOnAction(event -> {timer.restart(); previousImage();});
+        nextButton.setOnAction(event ->  nextImage());
+        previousButton.setOnAction(event -> previousImage());
     }
 
     public void setupSession(SessionSettings _settings) {
@@ -103,24 +103,26 @@ public class ActiveSessionController {
     }
 
     public void nextImage(){
+        timer.stop();
         int endOfSources = settings.imageSources().length-1;
         if (imageIndex==endOfSources){
             Platform.runLater(this::quitToSettings);
             return;
         }
-
-        if (imageIndex>0 && (imageIndex+1)%settings.picturesBetweenBreaks()==0)
+        if ((imageIndex+1)%settings.picturesBetweenBreaks()==0)
             beginBreak();
 
         imageIndex++;
         imageIndex = clampFromZero(imageIndex, settings.imageSources().length);
         displayImage(imageIndex);
+        timer.start();
     }
     public void previousImage(){
+        timer.stop();
         imageIndex--;
         imageIndex = clampFromZero(imageIndex, settings.imageSources().length);
         displayImage(imageIndex);
-
+        timer.start();
     }
     public void displayImage(int index) {
 
@@ -160,11 +162,11 @@ public class ActiveSessionController {
         }
 
         direction = direction.compareTo(0);
-        if ((direction>0 && imageView.getScaleX()>=maxZoom) || (direction<0 && imageView.getScaleY()<=0)) {
+        if ((direction>0 && imageView.getScaleX()>=maxZoom) || (direction<0 && imageView.getScaleY()<=1)) {
             return;
         }
 
-        double scaleFactor = (float) (direction * .05);
+        double scaleFactor = (float) (direction * .08);
         double newScale = clamp( (imageView.getScaleX()) + scaleFactor, 1, maxZoom);
 
         double TargetCursorDeltaX = calculateMouseXAfterZoom(scrollEvent, newScale);
@@ -204,7 +206,6 @@ public class ActiveSessionController {
     }
 
     private void resumeSession(){
-//        nextImage();
         timer.stop();
         timer.setUserTickFunction(this::onTick);
         timer.setInterval(settings.imageTimeMillis());

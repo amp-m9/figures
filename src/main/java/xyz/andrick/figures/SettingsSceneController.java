@@ -3,24 +3,27 @@ package xyz.andrick.figures;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
-public class SessionSettingsSceneController {
+public class SettingsSceneController implements Initializable {
     private Stage stage;
     private final Validator validator = new Validator();
-
-
     @FXML
     private Button startSessionButton;
     @FXML
@@ -33,20 +36,34 @@ public class SessionSettingsSceneController {
     private Spinner<Double> breakDurationSpinner;
     @FXML
     private Spinner<Integer> imagesBetweenBreaksSpinner;
-
-    @FXML
-    private ToggleGroup imageTimeToggleGroup;
     @FXML
     private ToggleButton breakMinutesToggle;
     @FXML
     private ToggleButton imageMinutesToggle;
-
     @FXML
-    public void initialize() {
+    private ToggleGroup breakTimeToggleGroup;
+    @FXML
+    private ToggleGroup imageTimeToggleGroup;
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle){
         directoryValidation();
         setUpDoubleSpinner(imageDurationSpinner);
         setUpDoubleSpinner(breakDurationSpinner);
         setUpIntegerSpinner(imagesBetweenBreaksSpinner);
+
+        breakTimeToggleGroup.selectedToggleProperty().addListener((obsVal, oldVal, newVal) -> {
+            if (newVal == null)
+                oldVal.setSelected(true);
+        });
+        imageTimeToggleGroup.selectedToggleProperty().addListener((obsVal, oldVal, newVal) -> {
+            if (newVal == null)
+                oldVal.setSelected(true);
+        });
+
+    }
+
+    private void setUpStyles(String css, Stage stage) {
+
     }
 
     private void setUpIntegerSpinner(Spinner<Integer> spinner) {
@@ -54,14 +71,18 @@ public class SessionSettingsSceneController {
 
         validator.createCheck()
                 .dependsOn("Duration", spinner.getEditor().textProperty())
-                .withMethod(c -> {
-                    String duration = c.get("Duration");
-                    if (!isNaturalNumber(duration))
-                        c.error("Number is invalid\n - Must be a whole number greater than 1");
-                    allFieldsValid();
-                })
+                .withMethod(checkIntegerIsValid())
                 .decorates(spinner)
                 .immediate();
+    }
+
+    private Consumer<Check.Context> checkIntegerIsValid() {
+        return c -> {
+            String duration = c.get("Duration");
+            if (!isNaturalNumber(duration))
+                c.error("Number is invalid\n - Must be a whole number greater than 1");
+            allFieldsValid();
+        };
     }
 
 
@@ -70,13 +91,7 @@ public class SessionSettingsSceneController {
 
         validator.createCheck()
                 .dependsOn("Duration", spinner.getEditor().textProperty())
-                .withMethod(c -> {
-                    String duration = c.get("Duration");
-                    if (!isValidDouble(duration))
-                        c.error("Entry is invalid\n - Must be a number >0");
-
-                    allFieldsValid();
-                })
+                .withMethod(checkDoubleIsValid())
                 .decorates(spinner)
                 .immediate();
 
@@ -87,20 +102,34 @@ public class SessionSettingsSceneController {
         });
     }
 
+    private Consumer<Check.Context> checkDoubleIsValid() {
+        return c -> {
+            String duration = c.get("Duration");
+            if (!isValidDouble(duration))
+                c.error("Entry is invalid\n - Must be a number >0");
+
+            allFieldsValid();
+        };
+    }
+
     private void directoryValidation() {
         validator.createCheck()
                 .dependsOn("DirectoryField", imageDirectoryTextField.textProperty())
-                .withMethod(c -> {
-                    if (!doesDirectoryExist(c.get("DirectoryField"))) {
-                        c.error("Directory is invalid.");
-                    }
-                    allFieldsValid();
-                })
+                .withMethod(checkDirectoryIsValid())
                 .decorates(imageDirectoryTextField)
                 .immediate();
 
         imageDirectoryTextField.textProperty().addListener((observableValue, s, t1) -> onImageDirectoryChanged(t1));
         onImageDirectoryChanged(imageDirectoryTextField.getText());
+    }
+
+    private Consumer<Check.Context> checkDirectoryIsValid() {
+        return c -> {
+            if (!doesDirectoryExist(c.get("DirectoryField"))) {
+                c.error("Directory is invalid.");
+            }
+            allFieldsValid();
+        };
     }
 
 
@@ -111,10 +140,7 @@ public class SessionSettingsSceneController {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("session-image.fxml"));
         Parent root = loader.load();
-
-        ActiveSessionController SessionController = loader.getController();
-
-
+        SessionSceneController SessionController = loader.getController();
         Scene scene = new Scene(root);
 
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -147,9 +173,8 @@ public class SessionSettingsSceneController {
         boolean validBreakDuration = isDouble(breakDurationSpinner.getEditor().getText());
         boolean validBreak = isNaturalNumber(imagesBetweenBreaksSpinner.getEditor().getText());
 
-        boolean all = validDirectory && validImageDuration && validBreakDuration && validBreak;
-
-        startSessionButton.setDisable(!all);
+        boolean allValid = validDirectory && validImageDuration && validBreakDuration && validBreak;
+        startSessionButton.setDisable(!allValid);
 
         return validDirectory && validImageDuration && validBreakDuration && validBreak;
     }
@@ -213,7 +238,7 @@ public class SessionSettingsSceneController {
         if (!Directory.exists())
             return new String[]{};
 
-        return Directory.list(new FilenameFilter() {
+        FilenameFilter imageFilter = new FilenameFilter() {
             static final String regex = "([^\\s]+(\\.(?i)(jpg|png|gif|bmp))$)";
             final Pattern pattern = Pattern.compile(regex);
 
@@ -221,6 +246,8 @@ public class SessionSettingsSceneController {
             public boolean accept(File dir, String name) {
                 return pattern.matcher(name.toLowerCase()).find();
             }
-        });
+        };
+
+        return Directory.list(imageFilter);
     }
 }

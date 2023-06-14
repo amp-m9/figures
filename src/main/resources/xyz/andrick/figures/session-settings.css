@@ -1,0 +1,113 @@
+/*#fxid{}*/
+#settingAnchorPane{
+    -fx-background-color: white;
+        -fx-max-width: 510;
+        -fx-min-width: 510;
+
+}
+.title{
+    -fx-font-family: "Inter Regular";
+    -fx-font-size: 20px;
+}
+.sub-title{
+    -fx-font-family: "Inter Regular";
+    -fx-font-size: 15px;
+    -fx-fill:#5A5A5A;
+}
+#filesFoundLabel{
+    -fx-text-fill:#3281DE;
+}
+.toggle-button{
+    -fx-min-height: 35;
+    -fx-max-height: 35;
+    -fx-max-width: 55;
+    -fx-min-width: 55;
+    -fx-background-color: #F2F2F2;
+    -fx-border-color: #CECECE;
+    -fx-background-insets: 0;
+    -fx-text-fill: #5A5A5A;
+    -fx-font: normal normal 15px "Inter Regular";
+}
+
+.left-toggle{
+    -fx-border-radius:	0 0 0 0;
+    -fx-background-radius: 0;
+    -fx-border-width: 1.5px 0 1.5px 0;
+}
+
+.right-toggle{
+    -fx-background-radius: 0 3px 3px 0;
+    -fx-border-radius:	0 3px 3px 0;
+    -fx-border-width: 1.5px 1.5px 1.5px 0;
+}
+
+.toggle-button:hover, .button:hover{
+    -fx-text-fill: #0075FF;
+}
+
+.toggle-button:selected{
+    -fx-border-color: #CECECE;
+    -fx-text-fill: white;
+    -fx-background-color: #0075FF;
+}
+.left-toggle:selected{
+    -fx-border-width: 0px 1.5px 0 0;
+}
+.right-toggle:selected{
+    -fx-border-width: 0 0 0 1.5px;
+}
+
+
+.button{
+    -fx-min-height: 35;
+    -fx-max-height: 35;
+    -fx-background-color: #F2F2F2;
+    -fx-border-color: #CECECE;
+    -fx-border-width: 1.5px;
+    -fx-border-radius:	3px;
+    -fx-background-insets: 0;
+    -fx-text-fill: #5A5A5A;
+    -fx-font: normal normal 15px "Inter Regular";
+}
+
+.button:pressed{
+    -fx-background-color: #0075FF;
+    -fx-border-color: #0075FF;
+    -fx-text-fill: white;
+}
+
+.text-field{
+    -fx-background-color: #F2F2F2;
+    -fx-border-color: #CECECE;
+    -fx-border-width: 1.5px;
+    -fx-border-radius:	3px;
+    -fx-min-height: 35;
+    -fx-max-height: 35;
+    -fx-effect: innershadow( gaussian, rgba( 1, 1, 1, 0 ), 10, 0, 5, 5 )
+}
+.spinner{
+    -fx-min-height: 35;
+    -fx-max-height: 35;
+}
+.spinner .text-field{
+    -fx-border-width: 0px;
+    -fx-border-radius:	0px 0 0 0px;
+}
+.spinner {
+    -fx-border-width: 1.5px 0 1.5px 1.5px;
+    -fx-border-radius:	3px 0 0 3px;
+    -fx-background-radius: 3px 0 0 3px;
+    -fx-border-color: #CECECE;
+}
+
+.spinner .increment-arrow-button, .spinner .decrement-arrow-button{
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+    -fx-border-width:0 1 0 1;
+    -fx-background-color: #F2F2F2;
+    -fx-border-color: #CECECE;
+    -fx-scale-y:1.15
+}
+.spinner .decrement-arrow-button{
+    -fx-border-width:1 1 0 1;
+}

@@ -10,32 +10,27 @@
 <?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="463.0" prefWidth="595.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.andrick.figures.SessionSettingsSceneController">
+<AnchorPane fx:id="settingAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="520.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.andrick.figures.SettingsSceneController">
    <children>
-      <VBox layoutX="40.0" layoutY="60.0" prefHeight="333.0" prefWidth="555.0" spacing="8.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="30.0">
+      <VBox layoutX="40.0" layoutY="60.0" prefHeight="333.0" prefWidth="555.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Image Source:" wrappingWidth="152.7880859375">
-               <font>
-                  <Font name="Inter Regular" size="20.0" />
-               </font>
+            <Text styleClass="title" text="Image Source:">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
             </Text>
             <HBox prefWidth="580.0" spacing="20.0">
                <children>
-                  <Text text="File Location">
-                     <font>
-                        <Font name="Inter Regular" size="17.0" />
-                     </font>
-                  </Text>
-                  <Label fx:id="filesFoundLabel" textFill="#3281de">
-                     <font>
-                        <Font name="Inter Regular" size="17.0" />
-                     </font>
-                  </Label>
+                  <Text styleClass="sub-title" text="File Location" />
+                  <Label fx:id="filesFoundLabel" styleClass="sub-title" />
                </children>
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
             </HBox>
             <HBox spacing="30.0" style="-fx-border-radius: 30;">
                <children>
@@ -46,77 +41,78 @@
                   </TextField>
                   <Button fx:id="browseButton" minWidth="45.0" mnemonicParsing="false" onAction="#onBrowseButtonPress" prefWidth="94.0" text="Browse" />
                </children>
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
             </HBox>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Session Settings" wrappingWidth="182.7880859375">
-               <font>
-                  <Font name="Inter Regular" size="20.0" />
-               </font>
+            <Text styleClass="title" text="Session Settings">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
             </Text>
-            <Text text="Time per figure" wrappingWidth="152.7880859375">
-               <font>
-                  <Font name="Inter Regular" size="17.0" />
-               </font>
+            <Text styleClass="sub-title" text="Time per figure">
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
             </Text>
-            <HBox spacing="20.0">
+            <HBox>
                <children>
-                  <HBox HBox.hgrow="ALWAYS">
+                  <HBox prefWidth="239.0" HBox.hgrow="NEVER">
                      <children>
-                        <Spinner fx:id="imageDurationSpinner" editable="true" prefHeight="31.0" prefWidth="152.0" />
+                        <Spinner fx:id="imageDurationSpinner" editable="true" HBox.hgrow="NEVER" />
                         <HBox HBox.hgrow="NEVER">
                            <children>
-                              <ToggleButton mnemonicParsing="false" selected="true" text="Seconds">
+                              <ToggleButton fx:id="imageMinutesToggle" mnemonicParsing="false" prefHeight="31.0" styleClass="left-toggle" text="min">
                                  <toggleGroup>
                                     <ToggleGroup fx:id="imageTimeToggleGroup" />
                                  </toggleGroup>
-                                 <HBox.margin>
-                                    <Insets left="10.0" />
-                                 </HBox.margin>
                               </ToggleButton>
-                              <ToggleButton mnemonicParsing="false" text="Minutes" toggleGroup="$imageTimeToggleGroup" fx:id="imageMinutesToggle"/>
+                              <ToggleButton mnemonicParsing="false" selected="true" styleClass="right-toggle" text="sec" toggleGroup="$imageTimeToggleGroup" />
                            </children>
                         </HBox>
                      </children>
                   </HBox>
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" text="Other" HBox.hgrow="ALWAYS" />
+                  <Pane HBox.hgrow="ALWAYS" />
+<!--                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="31.0" prefWidth="110.0" text="Other" HBox.hgrow="ALWAYS" />-->
                </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
             </HBox>
             <HBox>
                <children>
-                  <VBox HBox.hgrow="ALWAYS">
+                  <VBox HBox.hgrow="NEVER">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Figures between breaks">
-                           <font>
-                              <Font name="Inter Regular" size="17.0" />
-                           </font>
+                        <Text styleClass="sub-title" text="Photos until next break" VBox.vgrow="NEVER">
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
                         </Text>
                         <Spinner fx:id="imagesBetweenBreaksSpinner" editable="true" />
                      </children>
+                     <HBox.margin>
+                        <Insets right="30.0" />
+                     </HBox.margin>
                   </VBox>
-                  <VBox HBox.hgrow="ALWAYS">
+                  <Pane HBox.hgrow="ALWAYS" />
+                  <VBox HBox.hgrow="NEVER">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Break duration">
-                           <font>
-                              <Font name="Inter Regular" size="17.0" />
-                           </font>
+                        <Text styleClass="sub-title" text="Break duration">
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
                         </Text>
-                        <HBox>
+                        <HBox prefWidth="239.0">
                            <children>
-                              <Spinner fx:id="breakDurationSpinner" editable="true" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                              <HBox>
+                              <Spinner fx:id="breakDurationSpinner" editable="true" maxWidth="Infinity" prefHeight="26.0" HBox.hgrow="NEVER" />
+                              <HBox alignment="TOP_RIGHT" HBox.hgrow="NEVER">
                                  <children>
-                                    <ToggleButton mnemonicParsing="false" selected="true" text="Seconds">
-                                       <HBox.margin>
-                                          <Insets left="10.0" />
-                                       </HBox.margin>
+                                    <ToggleButton fx:id="breakMinutesToggle" alignment="CENTER" minHeight="31.0" mnemonicParsing="false" prefHeight="31.0" styleClass="left-toggle" text="min" HBox.hgrow="NEVER">
                                        <toggleGroup>
                                           <ToggleGroup fx:id="breakTimeToggleGroup" />
                                        </toggleGroup>
                                     </ToggleButton>
-                                    <ToggleButton mnemonicParsing="false" text="Minutes" fx:id="breakMinutesToggle">
-                                       <toggleGroup>
-                                          <ToggleGroup fx:id="$breakTimeToggleGroup" />
-                                       </toggleGroup>
-                                    </ToggleButton>
+                                    <ToggleButton mnemonicParsing="false" selected="true" styleClass="right-toggle" text="sec" toggleGroup="$breakTimeToggleGroup" />
                                  </children>
                               </HBox>
                            </children>
@@ -127,16 +123,19 @@
                      </children>
                   </VBox>
                </children>
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
             </HBox>
             <AnchorPane VBox.vgrow="ALWAYS">
                <children>
-                  <Button fx:id="startSessionButton" alignment="CENTER" contentDisplay="CENTER" layoutX="4.099999904632568" layoutY="3.100006103515625" mnemonicParsing="false" onAction="#onStartPressed" text="Start Session :)" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                  <Button fx:id="startSessionButton" alignment="CENTER" contentDisplay="CENTER" layoutX="4.099999904632568" layoutY="3.100006103515625" mnemonicParsing="false" onAction="#onStartPressed" text="Start Session :)" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
          </children>
       </VBox>
    </children>
    <padding>
-      <Insets bottom="30.0" left="20.0" right="20.0" top="30.0" />
+      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
    </padding>
 </AnchorPane>
