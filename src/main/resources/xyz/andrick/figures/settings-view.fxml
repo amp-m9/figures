@@ -7,7 +7,6 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
@@ -34,12 +33,8 @@
             </HBox>
             <HBox spacing="30.0" style="-fx-border-radius: 30;">
                <children>
-                  <TextField fx:id="imageDirectoryTextField" maxWidth="1.7976931348623157E308" text="/home/ace/Pictures/notion images" HBox.hgrow="ALWAYS">
-                     <effect>
-                        <InnerShadow />
-                     </effect>
-                  </TextField>
-                  <Button fx:id="browseButton" minWidth="45.0" mnemonicParsing="false" onAction="#onBrowseButtonPress" prefWidth="94.0" text="Browse" />
+                  <TextField fx:id="imageDirectoryTextField" maxWidth="1.7976931348623157E308" text="" HBox.hgrow="ALWAYS"/>
+                  <Button fx:id="browseButton" minWidth="45.0" mnemonicParsing="false" prefWidth="94.0" text="Browse" />
                </children>
                <VBox.margin>
                   <Insets bottom="20.0" />
@@ -62,12 +57,12 @@
                         <Spinner fx:id="imageDurationSpinner" editable="true" HBox.hgrow="NEVER" />
                         <HBox HBox.hgrow="NEVER">
                            <children>
-                              <ToggleButton fx:id="imageMinutesToggle" mnemonicParsing="false" prefHeight="31.0" styleClass="left-toggle" text="min">
+                              <ToggleButton fx:id="imageMinutesToggle" selected="true" mnemonicParsing="false" prefHeight="31.0" styleClass="left-toggle" text="min">
                                  <toggleGroup>
                                     <ToggleGroup fx:id="imageTimeToggleGroup" />
                                  </toggleGroup>
                               </ToggleButton>
-                              <ToggleButton mnemonicParsing="false" selected="true" styleClass="right-toggle" text="sec" toggleGroup="$imageTimeToggleGroup" />
+                              <ToggleButton mnemonicParsing="false"  styleClass="right-toggle" text="sec" toggleGroup="$imageTimeToggleGroup" />
                            </children>
                         </HBox>
                      </children>
@@ -107,12 +102,12 @@
                               <Spinner fx:id="breakDurationSpinner" editable="true" maxWidth="Infinity" prefHeight="26.0" HBox.hgrow="NEVER" />
                               <HBox alignment="TOP_RIGHT" HBox.hgrow="NEVER">
                                  <children>
-                                    <ToggleButton fx:id="breakMinutesToggle" alignment="CENTER" minHeight="31.0" mnemonicParsing="false" prefHeight="31.0" styleClass="left-toggle" text="min" HBox.hgrow="NEVER">
+                                    <ToggleButton fx:id="breakMinutesToggle" selected="true" alignment="CENTER" minHeight="31.0" mnemonicParsing="false" prefHeight="31.0" styleClass="left-toggle" text="min" HBox.hgrow="NEVER">
                                        <toggleGroup>
                                           <ToggleGroup fx:id="breakTimeToggleGroup" />
                                        </toggleGroup>
                                     </ToggleButton>
-                                    <ToggleButton mnemonicParsing="false" selected="true" styleClass="right-toggle" text="sec" toggleGroup="$breakTimeToggleGroup" />
+                                    <ToggleButton mnemonicParsing="false" styleClass="right-toggle" text="sec" toggleGroup="$breakTimeToggleGroup" />
                                  </children>
                               </HBox>
                            </children>
@@ -129,7 +124,7 @@
             </HBox>
             <AnchorPane VBox.vgrow="ALWAYS">
                <children>
-                  <Button fx:id="startSessionButton" alignment="CENTER" contentDisplay="CENTER" layoutX="4.099999904632568" layoutY="3.100006103515625" mnemonicParsing="false" onAction="#onStartPressed" text="Start Session :)" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <Button fx:id="startSessionButton" alignment="CENTER" contentDisplay="CENTER" layoutX="4.099999904632568" layoutY="3.100006103515625" mnemonicParsing="false" text="Start Session :)" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
          </children>

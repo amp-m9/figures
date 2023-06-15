@@ -29,6 +29,8 @@ public class SettingsSceneController implements Initializable {
     @FXML
     private Button startSessionButton;
     @FXML
+    private Button browseButton;
+    @FXML
     private TextField imageDirectoryTextField;
     @FXML
     private Label filesFoundLabel;
@@ -62,10 +64,19 @@ public class SettingsSceneController implements Initializable {
                 oldVal.setSelected(true);
         });
 
+        browseButton.setOnAction(event -> onBrowseButtonPress(event));
+        startSessionButton.setOnAction(event -> {
+            try {
+                onStartPressed(event);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
     }
 
     private void setUpIntegerSpinner(Spinner<Integer> spinner) {
-        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 10, 1));
+        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 5, 1));
 
         validator.createCheck()
                 .dependsOn("Duration", spinner.getEditor().textProperty())
@@ -85,7 +96,7 @@ public class SettingsSceneController implements Initializable {
 
 
     private void setUpDoubleSpinner(Spinner<Double> spinner) {
-        spinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Double.MAX_VALUE, 30, 5));
+        spinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Double.MAX_VALUE, 3, 5));
 
         validator.createCheck()
                 .dependsOn("Duration", spinner.getEditor().textProperty())
