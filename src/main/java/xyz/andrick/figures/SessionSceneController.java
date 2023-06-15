@@ -178,7 +178,7 @@ public class SessionSceneController {
         try {
             String imageURL = imageFile.toURI().toURL().toExternalForm();
             imageView.setImage(new Image(imageURL));
-            sessionProgressLabel.setText("%d / %d".formatted(index+1, settings.imageSources().length));
+            Platform.runLater(() ->sessionProgressLabel.setText("%d / %d".formatted(index+1, settings.imageSources().length)));
             resetImage();
             keepImageInFrame();
         } catch (MalformedURLException e) {
