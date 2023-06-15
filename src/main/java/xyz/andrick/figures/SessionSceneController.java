@@ -58,6 +58,8 @@ public class SessionSceneController {
     @FXML
     Label pauseTimeLabel;
     @FXML
+    Label sessionProgressLabel;
+    @FXML
     Text pauseText;
     @FXML
     Text breakText;
@@ -176,6 +178,7 @@ public class SessionSceneController {
         try {
             String imageURL = imageFile.toURI().toURL().toExternalForm();
             imageView.setImage(new Image(imageURL));
+            sessionProgressLabel.setText("%d / %d".formatted(index+1, settings.imageSources().length));
             resetImage();
             keepImageInFrame();
         } catch (MalformedURLException e) {
@@ -266,6 +269,7 @@ public class SessionSceneController {
         timer.killAll();
         Stage stage = settings.stage();
         stage.setScene(settings.previousScene());
+        stage.setTitle("Figures: Create a session");
         stage.show();
     }
 

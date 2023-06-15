@@ -170,6 +170,7 @@ public class SettingsSceneController implements Initializable {
                 stage
         );
         sessionSceneController.setupSession(settings);
+        stage.setTitle("Figures: Drawing session");
         stage.show();
     }
 
@@ -259,7 +260,7 @@ public class SettingsSceneController implements Initializable {
             return new String[]{};
 
         FilenameFilter imageFilter = new FilenameFilter() {
-            static final String regex = "([^\\s]+(\\.(?i)(jpg|png|gif|bmp))$)";
+            static final String regex = "([^\\s]+(\\.(?i)(jpg|png|gif|bmp|jpeg))$)";
             final Pattern pattern = Pattern.compile(regex);
 
             @Override

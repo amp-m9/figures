@@ -87,5 +87,15 @@
             </VBox>
          </children>
       </AnchorPane>
+      <AnchorPane layoutX="721.0" layoutY="20.0" styleClass="shaded-anchor-pane" AnchorPane.leftAnchor="10.0" AnchorPane.bottomAnchor="10.0">
+         <Label fx:id="sessionProgressLabel" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" textFill="WHITE">
+            <font>
+               <Font name="Inter Regular" size="13.0" />
+            </font>
+         </Label>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </AnchorPane>
    </children>
 </AnchorPane>

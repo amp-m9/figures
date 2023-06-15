@@ -1,5 +1,5 @@
 #timerArc {
-    -fx-fill: #3281DE;
+    -fx-fill: white;
 }
 #baseAnchorPane{
     -fx-min-width: 850;
@@ -12,8 +12,11 @@
     -fx-min-height: 60;
 }
 
-.break-anchor-pane{
-    -fx-background-color: black;
+#breakAnchorPane{
+    -fx-background-color: rgba(4, 1, 24, 1);
+}
+#pauseAnchorPane{
+    -fx-background-color: rgba(4, 1, 24, 0.89);
 }
 
 .display-text {
