@@ -1,6 +1,27 @@
 #timerArc {
     -fx-fill: #3281DE;
 }
+#baseAnchorPane{
+    -fx-min-width: 850;
+    -fx-min-height: 650;
+}
+#clockAnchorPane{
+    -fx-max-width: 60;
+    -fx-min-width: 60;
+    -fx-max-height: 60;
+    -fx-min-height: 60;
+}
+
+.break-anchor-pane{
+    -fx-background-color: black;
+}
+
+.display-text {
+    -fx-font-family: "Inter Regular";
+    -fx-font-size: 15px;
+    -fx-fill: white;
+}
+
 .shaded-anchor-pane{
     -fx-background-color: rgba(0, 0, 0, 0.75);
     -fx-background-radius: 7px;

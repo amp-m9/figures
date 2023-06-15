@@ -96,6 +96,8 @@ public class SessionSceneController {
         imageView.setPreserveRatio(true);
         imageView.fitHeightProperty().bind(imageAnchorPane.heightProperty());
         imageView.fitWidthProperty().bind(imageAnchorPane.widthProperty());
+        imageAnchorPane.widthProperty().addListener((obs, oldVal, newVal) -> keepImageInFrame());
+        imageAnchorPane.heightProperty().addListener((obs, oldVal, newVal) -> keepImageInFrame());
         imageAnchorPane.setOnMousePressed(this::onMousePressed);
         imageAnchorPane.setOnMouseDragged(this::onMouseDragged);
         imageAnchorPane.setOnScroll(this::zoomOnScroll);
@@ -175,7 +177,7 @@ public class SessionSceneController {
             String imageURL = imageFile.toURI().toURL().toExternalForm();
             imageView.setImage(new Image(imageURL));
             resetImage();
-            KeepImageInFrame();
+            keepImageInFrame();
         } catch (MalformedURLException e) {
             displayImageError(fileString);
         }
@@ -189,7 +191,7 @@ public class SessionSceneController {
     public void onMouseDragged(MouseEvent mouseEvent){
         imageView.setX(imageView.getX() + (mouseEvent.getSceneX() - startDragX));
         imageView.setY(imageView.getY() + (mouseEvent.getSceneY() - startDragY));
-        KeepImageInFrame();
+        keepImageInFrame();
         startDragX = mouseEvent.getSceneX();
         startDragY = mouseEvent.getSceneY();
     }
@@ -216,7 +218,7 @@ public class SessionSceneController {
         imageView.setScaleY(newScale);
 
         adjustMouseDelta(scrollEvent, TargetCursorDeltaX, TargetMouseDeltaY);
-        KeepImageInFrame();
+        keepImageInFrame();
     }
 
     private void onTick() {
@@ -227,8 +229,6 @@ public class SessionSceneController {
     private void beginBreak() {
         timer.timeElapsedProperty().removeListener(timeListener);
         timer.stop();
-        breakText.setVisible(true);
-        pauseText.setVisible(false);
         breakAnchorPane.setVisible(true);
         timer.setUserTickFunction(this::resumeFromBreak);
         timer.setInterval(settings.breakTimeMillis());
@@ -269,7 +269,7 @@ public class SessionSceneController {
         stage.show();
     }
 
-    private void KeepImageInFrame()
+    private void keepImageInFrame()
     {
         double imageHeight = imageView.getBoundsInParent().getHeight();
         double imageWidth = imageView.getBoundsInParent().getWidth();
