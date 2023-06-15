@@ -15,11 +15,11 @@ import java.io.IOException;
 public class FiguresApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(FiguresApplication.class.getResource("session-settings-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(FiguresApplication.class.getResource("settings-view.fxml"));
         Parent root = fxmlLoader.load();
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("session-settings.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("settings.css").toExternalForm());
 
         primaryStage.setTitle("Figures: Create a session");
         primaryStage.setScene(scene);

@@ -12,6 +12,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Arc;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -20,7 +21,6 @@ import java.net.MalformedURLException;
 
 public class SessionSceneController {
     private double startDragX, startDragY;
-    private final double maxZoom = 5;
     private int imageIndex = 0;
     private SessionSettings settings;
     private ObservableTimer timer;
@@ -34,11 +34,13 @@ public class SessionSceneController {
     @FXML
     AnchorPane breakAnchorPane;
     @FXML
+    AnchorPane pauseAnchorPane;
+    @FXML
     ImageView imageView;
     @FXML
     Button quitButton;
     @FXML
-    Button playPauseButton;
+    Button pauseButton;
     @FXML
     Button nextButton;
     @FXML
@@ -48,29 +50,75 @@ public class SessionSceneController {
     @FXML
     Button breakResumeButton;
     @FXML
+    Button pauseQuitButton;
+    @FXML
+    Button pauseResumeButton;
+    @FXML
     Label breakTimeLabel;
+    @FXML
+    Label pauseTimeLabel;
+    @FXML
+    Text pauseText;
+    @FXML
+    Text breakText;
     @FXML
     Arc timerArc;
     @FXML
     public void initialize()
     {
         breakAnchorPane.setVisible(false);
+        pauseAnchorPane.setVisible(false);
         timerArcLength = new SimpleDoubleProperty(360.0f);
         timerArc.lengthProperty().bind(timerArcLength);
+        setUpImageView();
+        setUpButtons();
+    }
+
+    private void setUpButtons() {
+        quitButton.setOnAction(event -> quitToSettings());
+        nextButton.setOnAction(event ->  nextImage());
+        pauseButton.setOnAction(event -> pauseSession());
+        previousButton.setOnAction(event -> previousImage());
+        breakResumeButton.setOnAction( event -> resumeFromBreak());
+        breakQuitButton.setOnAction( event -> {
+            resumeFromBreak();
+            quitToSettings();
+        });
+
+        pauseResumeButton.setOnAction(event -> resumeFromPause());
+        pauseQuitButton.setOnAction(event -> {
+            resumeFromPause();
+            quitToSettings();
+        });
+    }
+
+    private void setUpImageView() {
         imageView.setPreserveRatio(true);
         imageView.fitHeightProperty().bind(imageAnchorPane.heightProperty());
         imageView.fitWidthProperty().bind(imageAnchorPane.widthProperty());
         imageAnchorPane.setOnMousePressed(this::onMousePressed);
         imageAnchorPane.setOnMouseDragged(this::onMouseDragged);
         imageAnchorPane.setOnScroll(this::zoomOnScroll);
-        quitButton.setOnAction(event -> quitToSettings());
-        nextButton.setOnAction(event ->  nextImage());
-        previousButton.setOnAction(event -> previousImage());
+    }
+
+    private void pauseSession() {
+        timer.pause();
+        int timeInSeconds = (int) (settings.imageTimeMillis()/1000);
+        int secondsElapsed = timer.timeElapsedProperty().intValue()/1000;
+        int minutesLeft = (int) Math.floor((double) (timeInSeconds - secondsElapsed) /60);
+        int secondsLeft = (timeInSeconds-secondsElapsed)%60;
+        pauseTimeLabel.setText("Time left on image: %02d:%02d".formatted(minutesLeft, secondsLeft));
+        pauseAnchorPane.setVisible(true);
+    }
+    private void resumeFromPause(){
+        pauseAnchorPane.setVisible(false);
+        timer.resume();
     }
 
     public void setupSession(SessionSettings _settings) {
+        imageIndex = 0;
         settings = _settings;
-        System.out.println(settings.toString());
+        settings.stage().setResizable(true);
         displayImage(imageIndex);
         setUpTimers();
     }
@@ -79,15 +127,6 @@ public class SessionSceneController {
         Stage stage = (Stage)(imageView.getScene().getWindow());
         timer = new ObservableTimer(settings.imageTimeMillis(), -1, this::onTick);
         timer.start();
-        playPauseButton.setOnAction(event -> {
-            if(timer.isRunning()) {
-                timer.pause();
-            }
-            else {
-                timer.resume();
-            }
-        });
-
         timeListener = createSessionTimerListener();
         timer.timeElapsedProperty().addListener(timeListener);
         stage.setOnCloseRequest(windowEvent -> timer.killAll());
@@ -162,7 +201,8 @@ public class SessionSceneController {
         }
 
         direction = direction.compareTo(0);
-        if ((direction>0 && imageView.getScaleX()>=maxZoom) || (direction<0 && imageView.getScaleY()<=1)) {
+        double maxZoom = 5;
+        if ((direction>0 && imageView.getScaleX()>= maxZoom) || (direction<0 && imageView.getScaleY()<=1)) {
             return;
         }
 
@@ -187,8 +227,10 @@ public class SessionSceneController {
     private void beginBreak() {
         timer.timeElapsedProperty().removeListener(timeListener);
         timer.stop();
+        breakText.setVisible(true);
+        pauseText.setVisible(false);
         breakAnchorPane.setVisible(true);
-        timer.setUserTickFunction(this::resumeSession);
+        timer.setUserTickFunction(this::resumeFromBreak);
         timer.setInterval(settings.breakTimeMillis());
         timeListener = createBreakTimerListener();
         timer.timeElapsedProperty().addListener(timeListener);
@@ -197,15 +239,15 @@ public class SessionSceneController {
 
     private ChangeListener<Number> createBreakTimerListener(){
         return (observableValue, number, t1) -> {
-            int SecondsElapsed = t1.intValue()/1000;
+            int secondsElapsed = t1.intValue()/1000;
             int breakInSeconds = (int) (settings.breakTimeMillis()/1000);
-            int minutesLeft = (int) Math.floor((double) (breakInSeconds - SecondsElapsed) /60);
-            int secondsLeft = (breakInSeconds-SecondsElapsed)%60;
+            int minutesLeft = (int) Math.floor((double) (breakInSeconds - secondsElapsed) /60);
+            int secondsLeft = (breakInSeconds-secondsElapsed)%60;
             Platform.runLater(() -> breakTimeLabel.setText("Time remaining: %02d:%02d".formatted(minutesLeft, secondsLeft)));
         };
     }
 
-    private void resumeSession(){
+    private void resumeFromBreak(){
         timer.stop();
         timer.setUserTickFunction(this::onTick);
         timer.setInterval(settings.imageTimeMillis());
@@ -220,6 +262,7 @@ public class SessionSceneController {
     }
 
     private void quitToSettings() {
+        breakAnchorPane.setVisible(false);
         timer.killAll();
         Stage stage = settings.stage();
         stage.setScene(settings.previousScene());

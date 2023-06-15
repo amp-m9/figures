@@ -23,6 +23,8 @@ import java.util.regex.Pattern;
 
 public class SettingsSceneController implements Initializable {
     private Stage stage;
+    private Scene sessionScene;
+    private SessionSceneController sessionSceneController;
     private final Validator validator = new Validator();
     @FXML
     private Button startSessionButton;
@@ -59,10 +61,6 @@ public class SettingsSceneController implements Initializable {
             if (newVal == null)
                 oldVal.setSelected(true);
         });
-
-    }
-
-    private void setUpStyles(String css, Stage stage) {
 
     }
 
@@ -134,17 +132,14 @@ public class SettingsSceneController implements Initializable {
 
 
     public void onStartPressed(ActionEvent event) throws IOException {
-        if (!allFieldsValid()) {
+        if (!allFieldsValid())
             return;
-        }
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("session-image.fxml"));
-        Parent root = loader.load();
-        SessionSceneController SessionController = loader.getController();
-        Scene scene = new Scene(root);
+        if(sessionScene == null)
+            setupSessionSceneAndController();
 
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
+        stage.setScene(sessionScene);
 
         long breakDurationSpinnerValue = (long) Math.floor(breakDurationSpinner.getValue() * 1000);
         if(breakMinutesToggle.isSelected())
@@ -163,8 +158,22 @@ public class SettingsSceneController implements Initializable {
                 ((Node) event.getSource()).getScene(),
                 stage
         );
-        SessionController.setupSession(settings);
+        sessionSceneController.setupSession(settings);
         stage.show();
+    }
+
+    private void setupSessionSceneAndController() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("session-view.fxml"));
+        Parent root = loader.load();
+        sessionScene = new Scene(root);
+        sessionScene.getStylesheets().add(getClass().getResource("session.css").toExternalForm());
+
+        if (sessionSceneController != loader.getController() ){
+            sessionSceneController = loader.getController();
+        }
+
+        assert sessionScene!=null;
+        assert sessionSceneController!=null;
     }
 
     private boolean allFieldsValid() {

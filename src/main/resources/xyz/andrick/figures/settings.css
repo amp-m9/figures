@@ -1,8 +1,8 @@
 /*#fxid{}*/
 #settingAnchorPane{
     -fx-background-color: white;
-        -fx-max-width: 510;
-        -fx-min-width: 510;
+    -fx-max-width: 510;
+    -fx-min-width: 510;
 
 }
 .title{

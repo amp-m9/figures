@@ -1,0 +1,79 @@
+#timerArc {
+    -fx-fill: #3281DE;
+}
+.shaded-anchor-pane{
+    -fx-background-color: rgba(0, 0, 0, 0.75);
+    -fx-background-radius: 7px;
+    -fx-border-radius:	7px;
+}
+
+.primary-button{
+    -fx-background-color: #F2F2F2;
+    -fx-border-width: 1.5px;
+    -fx-border-radius:3px;
+    -fx-border-color: #CECECE;
+    -fx-background-insets: 0;
+    -fx-text-fill: #5A5A5A;
+    -fx-font: normal normal 15px "Inter Regular";
+}
+
+#imageAnchorPane{
+    -fx-background-color: radial-gradient(center 50% 50%, radius 100%, #0d0037 0%, #00081c 100%);
+    -fx-background-color: radial-gradient(center 50% 50%, radius 100%, #282828 0%, #0f0f0f 100%);
+}
+
+#quitButton{
+    -fx-max-width: 25;
+    -fx-min-width: 25;
+    -fx-max-height: 25;
+    -fx-min-height: 25;
+    -fx-background-color:white;
+    -fx-border-width: 0;
+    -fx-shape: "M21 8.5C25 8.5 25 0.5 21 0.5H6.5C4.33334 0.833374 0 2.80005 0 8V49C0.166656 51.3334 1.70001 56 6.5 56H20C24.5 56 24.5 48 20 48H7.5V8.5H21ZM19 24C16.7909 24 15 25.7909 15 28C15 30.2091 16.7909 32 19 32H43.0184L35.3882 39.6302C33.8261 41.1923 33.8261 43.725 35.3882 45.287C36.9503 46.8491 39.4829 46.8491 41.045 45.287L54.8468 31.4852C55.6794 30.6527 56.0682 29.5446 56.0133 28.4546C56.0682 27.3646 55.6794 26.2565 54.8468 25.424L41.045 11.6221C39.4829 10.0601 36.9503 10.0601 35.3882 11.6221C33.8261 13.1842 33.8261 15.7169 35.3882 17.2789L42.1092 24H19Z";
+}
+
+#previousButton{
+    -fx-max-width: 31;
+    -fx-min-width: 31;
+    -fx-max-height: 25;
+    -fx-min-height: 25;
+    -fx-background-color:white;
+    -fx-border-width: 0;
+    -fx-shape: "M69.5172 56L34.7586 28L34.7586 56L-3.35019e-05 28L34.7586 0V28L69.5172 0L69.5172 56Z";
+}
+
+#pauseButton{
+    -fx-max-width: 22;
+    -fx-min-width: 22;
+    -fx-max-height: 25;
+    -fx-min-height: 25;    -fx-background-color:white;
+    -fx-border-width: 0;
+    -fx-shape: "M17.3793 0H0V56H17.3793V0ZM50.2069 0H32.8276V56H50.2069V0Z";
+}
+
+#nextButton{
+    -fx-max-width: 31;
+    -fx-min-width: 31;
+    -fx-max-height: 25;
+    -fx-min-height: 25;
+    -fx-background-color:white;
+    -fx-border-width: 0;
+    -fx-shape: "M0 56L34.7586 28L34.7586 56L69.5172 28L34.7586 0V28L2.98434e-06 0L0 56Z";
+}
+
+#gridButton{
+    -fx-max-width: 25;
+    -fx-min-width: 25;
+    -fx-max-height: 25;
+    -fx-min-height: 25;    -fx-background-color:white;
+    -fx-border-width: 0;
+    -fx-shape:"M0 0H17V17H0V0ZM0 19H17V37H0V19ZM17 39H0V56H17V39ZM19 0H37V17H19V0ZM37 19H19V37H37V19ZM19 39H37V56H19V39ZM56 0H39V17H56V0ZM39 19H56V37H39V19ZM56 39H39V56H56V39Z";
+}
+
+#quitButton:hover,
+#previousButton:hover,
+#pauseButton:hover,
+#nextButton:hover,
+#gridButton:hover{
+    -fx-background-color:#0075FF;
+}
