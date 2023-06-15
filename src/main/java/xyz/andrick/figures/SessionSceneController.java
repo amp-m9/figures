@@ -12,15 +12,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Arc;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.MalformedURLException;
 
 
-public class ActiveSessionController {
+public class SessionSceneController {
     private double startDragX, startDragY;
-    private final double maxZoom = 5;
     private int imageIndex = 0;
     private SessionSettings settings;
     private ObservableTimer timer;
@@ -34,11 +34,13 @@ public class ActiveSessionController {
     @FXML
     AnchorPane breakAnchorPane;
     @FXML
+    AnchorPane pauseAnchorPane;
+    @FXML
     ImageView imageView;
     @FXML
     Button quitButton;
     @FXML
-    Button playPauseButton;
+    Button pauseButton;
     @FXML
     Button nextButton;
     @FXML
@@ -48,29 +50,79 @@ public class ActiveSessionController {
     @FXML
     Button breakResumeButton;
     @FXML
+    Button pauseQuitButton;
+    @FXML
+    Button pauseResumeButton;
+    @FXML
     Label breakTimeLabel;
+    @FXML
+    Label pauseTimeLabel;
+    @FXML
+    Label sessionProgressLabel;
+    @FXML
+    Text pauseText;
+    @FXML
+    Text breakText;
     @FXML
     Arc timerArc;
     @FXML
     public void initialize()
     {
         breakAnchorPane.setVisible(false);
+        pauseAnchorPane.setVisible(false);
         timerArcLength = new SimpleDoubleProperty(360.0f);
         timerArc.lengthProperty().bind(timerArcLength);
+        setUpImageView();
+        setUpButtons();
+    }
+
+    private void setUpButtons() {
+        quitButton.setOnAction(event -> quitToSettings());
+        nextButton.setOnAction(event ->  nextImage());
+        pauseButton.setOnAction(event -> pauseSession());
+        previousButton.setOnAction(event -> previousImage());
+        breakResumeButton.setOnAction( event -> resumeFromBreak());
+        breakQuitButton.setOnAction( event -> {
+            resumeFromBreak();
+            quitToSettings();
+        });
+
+        pauseResumeButton.setOnAction(event -> resumeFromPause());
+        pauseQuitButton.setOnAction(event -> {
+            resumeFromPause();
+            quitToSettings();
+        });
+    }
+
+    private void setUpImageView() {
         imageView.setPreserveRatio(true);
         imageView.fitHeightProperty().bind(imageAnchorPane.heightProperty());
         imageView.fitWidthProperty().bind(imageAnchorPane.widthProperty());
+        imageAnchorPane.widthProperty().addListener((obs, oldVal, newVal) -> keepImageInFrame());
+        imageAnchorPane.heightProperty().addListener((obs, oldVal, newVal) -> keepImageInFrame());
         imageAnchorPane.setOnMousePressed(this::onMousePressed);
         imageAnchorPane.setOnMouseDragged(this::onMouseDragged);
         imageAnchorPane.setOnScroll(this::zoomOnScroll);
-        quitButton.setOnAction(event -> quitToSettings());
-        nextButton.setOnAction(event -> {timer.restart(); nextImage();});
-        previousButton.setOnAction(event -> {timer.restart(); previousImage();});
+    }
+
+    private void pauseSession() {
+        timer.pause();
+        int timeInSeconds = (int) (settings.imageTimeMillis()/1000);
+        int secondsElapsed = timer.timeElapsedProperty().intValue()/1000;
+        int minutesLeft = (int) Math.floor((double) (timeInSeconds - secondsElapsed) /60);
+        int secondsLeft = (timeInSeconds-secondsElapsed)%60;
+        pauseTimeLabel.setText("Time left on image: %02d:%02d".formatted(minutesLeft, secondsLeft));
+        pauseAnchorPane.setVisible(true);
+    }
+    private void resumeFromPause(){
+        pauseAnchorPane.setVisible(false);
+        timer.resume();
     }
 
     public void setupSession(SessionSettings _settings) {
+        imageIndex = 0;
         settings = _settings;
-        System.out.println(settings.toString());
+        settings.stage().setResizable(true);
         displayImage(imageIndex);
         setUpTimers();
     }
@@ -79,15 +131,6 @@ public class ActiveSessionController {
         Stage stage = (Stage)(imageView.getScene().getWindow());
         timer = new ObservableTimer(settings.imageTimeMillis(), -1, this::onTick);
         timer.start();
-        playPauseButton.setOnAction(event -> {
-            if(timer.isRunning()) {
-                timer.pause();
-            }
-            else {
-                timer.resume();
-            }
-        });
-
         timeListener = createSessionTimerListener();
         timer.timeElapsedProperty().addListener(timeListener);
         stage.setOnCloseRequest(windowEvent -> timer.killAll());
@@ -103,24 +146,26 @@ public class ActiveSessionController {
     }
 
     public void nextImage(){
+        timer.stop();
         int endOfSources = settings.imageSources().length-1;
         if (imageIndex==endOfSources){
             Platform.runLater(this::quitToSettings);
             return;
         }
-
-        if (imageIndex>0 && (imageIndex+1)%settings.picturesBetweenBreaks()==0)
+        if ((imageIndex+1)%settings.picturesBetweenBreaks()==0)
             beginBreak();
 
         imageIndex++;
         imageIndex = clampFromZero(imageIndex, settings.imageSources().length);
         displayImage(imageIndex);
+        timer.start();
     }
     public void previousImage(){
+        timer.stop();
         imageIndex--;
         imageIndex = clampFromZero(imageIndex, settings.imageSources().length);
         displayImage(imageIndex);
-
+        timer.start();
     }
     public void displayImage(int index) {
 
@@ -133,8 +178,9 @@ public class ActiveSessionController {
         try {
             String imageURL = imageFile.toURI().toURL().toExternalForm();
             imageView.setImage(new Image(imageURL));
+            sessionProgressLabel.setText("%d / %d".formatted(index+1, settings.imageSources().length));
             resetImage();
-            KeepImageInFrame();
+            keepImageInFrame();
         } catch (MalformedURLException e) {
             displayImageError(fileString);
         }
@@ -148,7 +194,7 @@ public class ActiveSessionController {
     public void onMouseDragged(MouseEvent mouseEvent){
         imageView.setX(imageView.getX() + (mouseEvent.getSceneX() - startDragX));
         imageView.setY(imageView.getY() + (mouseEvent.getSceneY() - startDragY));
-        KeepImageInFrame();
+        keepImageInFrame();
         startDragX = mouseEvent.getSceneX();
         startDragY = mouseEvent.getSceneY();
     }
@@ -160,11 +206,12 @@ public class ActiveSessionController {
         }
 
         direction = direction.compareTo(0);
-        if ((direction>0 && imageView.getScaleX()>=maxZoom) || (direction<0 && imageView.getScaleY()<=0)) {
+        double maxZoom = 5;
+        if ((direction>0 && imageView.getScaleX()>= maxZoom) || (direction<0 && imageView.getScaleY()<=1)) {
             return;
         }
 
-        double scaleFactor = (float) (direction * .05);
+        double scaleFactor = (float) (direction * .08);
         double newScale = clamp( (imageView.getScaleX()) + scaleFactor, 1, maxZoom);
 
         double TargetCursorDeltaX = calculateMouseXAfterZoom(scrollEvent, newScale);
@@ -174,7 +221,7 @@ public class ActiveSessionController {
         imageView.setScaleY(newScale);
 
         adjustMouseDelta(scrollEvent, TargetCursorDeltaX, TargetMouseDeltaY);
-        KeepImageInFrame();
+        keepImageInFrame();
     }
 
     private void onTick() {
@@ -186,7 +233,7 @@ public class ActiveSessionController {
         timer.timeElapsedProperty().removeListener(timeListener);
         timer.stop();
         breakAnchorPane.setVisible(true);
-        timer.setUserTickFunction(this::resumeSession);
+        timer.setUserTickFunction(this::resumeFromBreak);
         timer.setInterval(settings.breakTimeMillis());
         timeListener = createBreakTimerListener();
         timer.timeElapsedProperty().addListener(timeListener);
@@ -195,16 +242,15 @@ public class ActiveSessionController {
 
     private ChangeListener<Number> createBreakTimerListener(){
         return (observableValue, number, t1) -> {
-            int SecondsElapsed = t1.intValue()/1000;
+            int secondsElapsed = t1.intValue()/1000;
             int breakInSeconds = (int) (settings.breakTimeMillis()/1000);
-            int minutesLeft = (int) Math.floor((double) (breakInSeconds - SecondsElapsed) /60);
-            int secondsLeft = (breakInSeconds-SecondsElapsed)%60;
+            int minutesLeft = (int) Math.floor((double) (breakInSeconds - secondsElapsed) /60);
+            int secondsLeft = (breakInSeconds-secondsElapsed)%60;
             Platform.runLater(() -> breakTimeLabel.setText("Time remaining: %02d:%02d".formatted(minutesLeft, secondsLeft)));
         };
     }
 
-    private void resumeSession(){
-//        nextImage();
+    private void resumeFromBreak(){
         timer.stop();
         timer.setUserTickFunction(this::onTick);
         timer.setInterval(settings.imageTimeMillis());
@@ -219,13 +265,15 @@ public class ActiveSessionController {
     }
 
     private void quitToSettings() {
+        breakAnchorPane.setVisible(false);
         timer.killAll();
         Stage stage = settings.stage();
         stage.setScene(settings.previousScene());
+        stage.setTitle("Figures: Create a session");
         stage.show();
     }
 
-    private void KeepImageInFrame()
+    private void keepImageInFrame()
     {
         double imageHeight = imageView.getBoundsInParent().getHeight();
         double imageWidth = imageView.getBoundsInParent().getWidth();

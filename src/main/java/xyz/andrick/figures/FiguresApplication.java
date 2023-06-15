@@ -15,22 +15,16 @@ import java.io.IOException;
 public class FiguresApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(FiguresApplication.class.getResource("session-settings-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(FiguresApplication.class.getResource("settings-view.fxml"));
         Parent root = fxmlLoader.load();
-        AnchorPane settings = new AnchorPane();
-
-//        String css = getClass().getResource("session-settings.css").toExternalForm();
-//        scene.getStylesheets().add(css);
 
         Scene scene = new Scene(root);
-        SessionSettingsSceneController sessionSettingsController = fxmlLoader.getController();
+        scene.getStylesheets().add(getClass().getResource("settings.css").toExternalForm());
 
         primaryStage.setTitle("Figures: Create a session");
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.show();
-    }
-
-    private void makeSettings(){
     }
 
     public static void main(String[] args) {
