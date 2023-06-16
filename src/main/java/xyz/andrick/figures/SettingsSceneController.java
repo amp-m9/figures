@@ -1,5 +1,6 @@
 package xyz.andrick.figures;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,7 +18,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
@@ -33,6 +34,8 @@ public class SettingsSceneController implements Initializable {
     @FXML
     private TextField imageDirectoryTextField;
     @FXML
+    private Label shuffleLabel;
+    @FXML
     private Label filesFoundLabel;
     @FXML
     private Spinner<Double> imageDurationSpinner;
@@ -41,9 +44,13 @@ public class SettingsSceneController implements Initializable {
     @FXML
     private Spinner<Integer> imagesBetweenBreaksSpinner;
     @FXML
+    private Spinner<Integer> figureCountSpinner;
+    @FXML
     private ToggleButton breakMinutesToggle;
     @FXML
     private ToggleButton imageMinutesToggle;
+    @FXML
+    private ToggleButton shuffleButton;
     @FXML
     private ToggleGroup breakTimeToggleGroup;
     @FXML
@@ -51,9 +58,10 @@ public class SettingsSceneController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
         directoryValidation();
-        setUpDoubleSpinner(imageDurationSpinner);
-        setUpDoubleSpinner(breakDurationSpinner);
-        setUpIntegerSpinner(imagesBetweenBreaksSpinner);
+        setUpDoubleSpinner(imageDurationSpinner, 1);
+        setUpDoubleSpinner(breakDurationSpinner, 5);
+        setUpIntegerSpinner(imagesBetweenBreaksSpinner, 10);
+        setUpIntegerSpinner(figureCountSpinner, 20);
 
         breakTimeToggleGroup.selectedToggleProperty().addListener((obsVal, oldVal, newVal) -> {
             if (newVal == null)
@@ -64,6 +72,11 @@ public class SettingsSceneController implements Initializable {
                 oldVal.setSelected(true);
         });
 
+        shuffleButton.selectedProperty().addListener(((obsVal, oldVal, newVal) ->{
+            Platform.runLater(()->shuffleLabel.setText(newVal?"shuffle on":""));
+        } ));
+
+        shuffleButton.setSelected(true);
         browseButton.setOnAction(event -> onBrowseButtonPress(event));
         startSessionButton.setOnAction(event -> {
             try {
@@ -75,8 +88,8 @@ public class SettingsSceneController implements Initializable {
 
     }
 
-    private void setUpIntegerSpinner(Spinner<Integer> spinner) {
-        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 5, 1));
+    private void setUpIntegerSpinner(Spinner<Integer> spinner, int initialValue) {
+        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Integer.MAX_VALUE, initialValue, 1));
 
         validator.createCheck()
                 .dependsOn("Duration", spinner.getEditor().textProperty())
@@ -88,15 +101,15 @@ public class SettingsSceneController implements Initializable {
     private Consumer<Check.Context> checkIntegerIsValid() {
         return c -> {
             String duration = c.get("Duration");
-            if (!isNaturalNumber(duration))
+            if (!isValidNaturalNumber(duration))
                 c.error("Number is invalid\n - Must be a whole number greater than 1");
             allFieldsValid();
         };
     }
 
 
-    private void setUpDoubleSpinner(Spinner<Double> spinner) {
-        spinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Double.MAX_VALUE, 3, 5));
+    private void setUpDoubleSpinner(Spinner<Double> spinner, int initialValue) {
+        spinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Double.MAX_VALUE, initialValue, 1));
 
         validator.createCheck()
                 .dependsOn("Duration", spinner.getEditor().textProperty())
@@ -145,7 +158,6 @@ public class SettingsSceneController implements Initializable {
     public void onStartPressed(ActionEvent event) throws IOException {
         if (!allFieldsValid())
             return;
-
         if(sessionScene == null)
             setupSessionSceneAndController();
 
@@ -165,13 +177,25 @@ public class SettingsSceneController implements Initializable {
                 breakDurationSpinnerValue,
                 imageDirectoryTextField.getText(),
                 imagesBetweenBreaksSpinner.getValue(),
-                getImagesInDirectory(imageDirectoryTextField.getText()),
+                getFilePaths(),
                 ((Node) event.getSource()).getScene(),
                 stage
         );
         sessionSceneController.setupSession(settings);
         stage.setTitle("Figures: Drawing session");
         stage.show();
+    }
+
+    private String[] getFilePaths() {
+        String[] filePaths = new String[figureCountSpinner.getValue()];
+        System.arraycopy(getImagesInDirectory(imageDirectoryTextField.getText()), 0, filePaths, 0, figureCountSpinner.getValue());
+        if (!shuffleButton.isSelected())
+            return filePaths;
+
+        List<String> pathList = Arrays.asList(filePaths);
+        Collections.shuffle(pathList);
+        pathList.toArray(filePaths);
+        return filePaths;
     }
 
     private void setupSessionSceneAndController() throws IOException {
@@ -192,15 +216,16 @@ public class SettingsSceneController implements Initializable {
         boolean validDirectory = doesDirectoryExist(imageDirectoryTextField.getText());
         boolean validImageDuration = isDouble(imageDurationSpinner.getEditor().getText());
         boolean validBreakDuration = isDouble(breakDurationSpinner.getEditor().getText());
-        boolean validBreak = isNaturalNumber(imagesBetweenBreaksSpinner.getEditor().getText());
+        boolean validBreak = isValidNaturalNumber(imagesBetweenBreaksSpinner.getEditor().getText());
+        boolean validFigureCount = isValidNaturalNumber(figureCountSpinner.getEditor().getText());
 
-        boolean allValid = validDirectory && validImageDuration && validBreakDuration && validBreak;
+        boolean allValid = validDirectory && validImageDuration && validBreakDuration && validBreak && validFigureCount;
         startSessionButton.setDisable(!allValid);
 
-        return validDirectory && validImageDuration && validBreakDuration && validBreak;
+        return allValid;
     }
 
-    private boolean isNaturalNumber(String number) {
+    private boolean isValidNaturalNumber(String number) {
         try {
             int value = Integer.parseInt(number);
             return value >= 1;
@@ -231,9 +256,13 @@ public class SettingsSceneController implements Initializable {
             filesFoundLabel.setText("Directory is invalid");
             return;
         }
-        String imagesFoundString = "%d images found in directory".formatted(getImagesInDirectory(newDirectory).length);
+        int imageCount = getImagesInDirectory(newDirectory).length;
+        String imagesFoundString = "%d images found in directory".formatted(imageCount);
         filesFoundLabel.setText(imagesFoundString);
+        figureCountSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, imageCount, imageCount, 1));
 
+        int imagesBetween = imagesBetweenBreaksSpinner.getValue()>imageCount? imageCount: imagesBetweenBreaksSpinner.getValue();
+        imagesBetweenBreaksSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, imageCount, imagesBetween, 1));
     }
 
     public void onBrowseButtonPress(ActionEvent event) {
