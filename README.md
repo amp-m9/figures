@@ -5,18 +5,36 @@ image folder the user points to as image source. Still in early alpha.
 https://github.com/amp-m9/figures/assets/31145121/2f309cd6-640f-4eee-9e9a-049b4be70971
 
 ## Build with maven and warp-packer.
-get [warp-packer](https://github.com/dgiagio/warp) and store it in the root folder of the project.
-- [Linux](https://github.com/dgiagio/warp#macos:~:text=sh%20%0AHello%2C%20world.-,Download%20warp%2Dpacker,directory%20in%20your%20PATH%2C%20you%20only%20need%20to%20download%20it%20once.,-%24%20wget%20%2DO%20warp)
-- [MacOS](https://github.com/dgiagio/warp#macos:~:text=dgiagio%24%20chmod%20%2Bx%20launch-,Download%20warp%2Dpacker,directory%20in%20your%20PATH%2C%20you%20only%20need%20to%20download%20it%20once.,-Diegos%2DiMac%3Amyapp%20dgiagio)
-- [Windows](https://github.com/dgiagio/warp#windows:~:text=B%20%25ERRORLEVEL%25-,Download%20warp%2Dpacker,directory%20in%20your%20PATH%2C%20you%20only%20need%20to%20download%20it%20once.,-PS%20C%3A%5CUsers)
+### prerequisites
+- maven
+- JDK 17
+- [warp-packer](https://github.com/dgiagio/warp/releases)
 
+Get [warp-packer](https://github.com/dgiagio/warp/releases) and store it in the root folder of the project.
+
+### Linux/MacOS
 Then run the following, replacing `PLATFORM` with one of the following options:  
 - `linux-x64`
-- `windows-x64`
-- `macos-x64`
-
+- `macos-x64`**(untested)**
 ```shell
 mvn clean javafx:jlink
 mkdir release
 ./warp-packer --arch [PLATFORM] -i ./target/figures/ --exec bin/figures --output ./release/figures
 ```
+
+### Windows
+Windows install requires a bit more work.
+
+- Run `mvn clean javafx:jlink`
+- modify target\figures\bin\figures.bat.
+    - replace `"%DIR%\java"` at the start of the last line with `start "" "%DIR%\javaw"` **making sure it says `javaw` and not `java`**
+    - add ` && exit 0` to the end of the last line.
+    - last line should now read as follows/similar
+      ```shell
+      start "" "%DIR%\javaw" %JLINK_VM_OPTIONS% -m xyz.andrick.figures/xyz.andrick.figures.FiguresApplication %* && exit 0
+      ```
+- run the following
+  ```shell
+  warp-packer --arch windows-x64 -i ./target/figures/ --exec bin/figures.bat --output ./release/figures.exe
+  ```
+now find figures.exe in the releases foler of the project :) 
