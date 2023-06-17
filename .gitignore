@@ -41,3 +41,7 @@ build/
 .idea/uiDesigner.xml
 .idea/vcs.xml
 .idea/.gitignore
+
+## all ##
+/release/
+/warp-packer
