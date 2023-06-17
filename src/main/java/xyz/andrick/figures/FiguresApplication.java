@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -21,6 +22,7 @@ public class FiguresApplication extends Application {
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("settings.css").toExternalForm());
 
+        primaryStage.getIcons().add(new Image(getClass().getResource("icon.png").toExternalForm()));
         primaryStage.setTitle("Figures: Create a session");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
