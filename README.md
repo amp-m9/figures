@@ -21,7 +21,7 @@ https://github.com/amp-m9/figures/assets/31145121/2f309cd6-640f-4eee-9e9a-049b4b
 Get [warp-packer](https://github.com/dgiagio/warp/releases) and store it in the root folder of the project.
 
 ### Linux/MacOS
-Then run the following, replacing `PLATFORM` with one of the following options:  
+Then run the following, replacing `[PLATFORM]` with one of the following options:  
 - `linux-x64`
 - `macos-x64`**(untested)**
 ```shell
