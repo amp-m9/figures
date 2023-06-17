@@ -1,6 +1,14 @@
-# figures
+# Figures
+![bann err](https://github.com/amp-m9/figures/assets/31145121/5cdcdaef-5a5b-4f1a-9551-c7adbde888e7)
+
 Figure drawing class application written in Java using JavaFX for the UI. Will use an 
 image folder the user points to as image source. Still in early alpha.
+
+## Install/use
+You can simply download the app for your platform from the 
+[releases page](https://github.com/amp-m9/figures/releases) if available, alternatively
+you can [build it yourself](https://github.com/amp-m9/figures#build-with-maven-and-warp-packer).
+
 ## App demo.
 https://github.com/amp-m9/figures/assets/31145121/2f309cd6-640f-4eee-9e9a-049b4be70971
 
