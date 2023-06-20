@@ -133,7 +133,7 @@ public class SessionSceneController {
         timer.start();
         timeListener = createSessionTimerListener();
         timer.timeElapsedProperty().addListener(timeListener);
-        stage.setOnCloseRequest(windowEvent -> timer.killAll());
+        stage.setOnCloseRequest(windowEvent -> timer.stop());
     }
 
     private ChangeListener<Number> createSessionTimerListener() {
@@ -148,10 +148,12 @@ public class SessionSceneController {
     public void nextImage(){
         timer.stop();
         int endOfSources = settings.imageSources().length-1;
+
         if (imageIndex==endOfSources){
             Platform.runLater(this::quitToSettings);
             return;
         }
+
         if ((imageIndex+1)%settings.picturesBetweenBreaks()==0)
             beginBreak();
 
@@ -233,7 +235,7 @@ public class SessionSceneController {
         timer.timeElapsedProperty().removeListener(timeListener);
         timer.stop();
         breakAnchorPane.setVisible(true);
-        timer.setUserTickFunction(this::resumeFromBreak);
+        timer.setTimeOutFunction(this::resumeFromBreak);
         timer.setInterval(settings.breakTimeMillis());
         timeListener = createBreakTimerListener();
         timer.timeElapsedProperty().addListener(timeListener);
@@ -252,7 +254,7 @@ public class SessionSceneController {
 
     private void resumeFromBreak(){
         timer.stop();
-        timer.setUserTickFunction(this::onTick);
+        timer.setTimeOutFunction(this::onTick);
         timer.setInterval(settings.imageTimeMillis());
         timer.timeElapsedProperty().removeListener(timeListener);
         timeListener = createSessionTimerListener();
@@ -266,7 +268,7 @@ public class SessionSceneController {
 
     private void quitToSettings() {
         breakAnchorPane.setVisible(false);
-        timer.killAll();
+        timer.stop();
         Stage stage = settings.stage();
         stage.setScene(settings.previousScene());
         stage.setTitle("Figures: Create a session");
