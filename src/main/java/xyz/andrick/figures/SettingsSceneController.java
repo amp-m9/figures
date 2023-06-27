@@ -289,7 +289,7 @@ public class SettingsSceneController implements Initializable {
             return new String[]{};
 
         FilenameFilter imageFilter = new FilenameFilter() {
-            static final String regex = "([^\\s]+(\\.(?i)(jpg|png|gif|bmp|jpeg))$)";
+            static final String regex = "([^\\s]+(\\.(?i)(jpg|png|bmp|jpeg))$)";
             final Pattern pattern = Pattern.compile(regex);
 
             @Override

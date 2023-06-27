@@ -13,8 +13,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="settingAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="520.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.andrick.figures.SettingsSceneController">
-    <VBox layoutX="40.0" layoutY="60.0" prefHeight="333.0" prefWidth="555.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<AnchorPane fx:id="settingAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="520.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.andrick.figures.SettingsSceneController">
+    <VBox layoutX="40.0" layoutY="60.0" prefHeight="333.0" prefWidth="555.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
             <Text styleClass="title" text="Image Source:">
                 <VBox.margin>
                     <Insets bottom="10.0" />
@@ -75,7 +75,7 @@
                 </Text>
                 <Spinner fx:id="figureCountSpinner" editable="true" />
                 <HBox.margin>
-                    <Insets right="30.0" />
+                    <Insets />
                 </HBox.margin>
             </VBox>
             <VBox.margin>
@@ -115,7 +115,7 @@
                     </Text>
                     <Spinner fx:id="imagesBetweenBreaksSpinner" editable="true" />
                     <HBox.margin>
-                        <Insets right="30.0" />
+                        <Insets />
                     </HBox.margin>
                 </VBox>
                 <VBox.margin>
