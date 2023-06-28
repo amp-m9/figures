@@ -32,6 +32,7 @@ public class SessionSceneController {
     private ChangeListener<Number> timeListener;
     private Image colorImage;
     private WritableImage greyScaleImage;
+    private Thread greyScaleThread;
     private Line[] verticalGridLines;
     private Line[] horizontalGridLines;
     @FXML
@@ -167,6 +168,11 @@ public class SessionSceneController {
 
     private void toggleGreyscale(boolean selected) {
         if (selected) {
+            try{
+                greyScaleThread.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             imageView.setImage(greyScaleImage);
             return;
         }
@@ -253,7 +259,7 @@ public class SessionSceneController {
 
     public void displayImage(int index) {
 
-        String fileString = settings.directory() + '/' + settings.imageSources()[index % settings.imageSources().length];
+        String fileString = settings.imageSources()[index % settings.imageSources().length];
         File imageFile = new File(fileString);
         if (!imageFile.exists()) {
             displayImageError(fileString);
@@ -262,7 +268,14 @@ public class SessionSceneController {
         try {
             String imageURL = imageFile.toURI().toURL().toExternalForm();
             colorImage = new Image(imageURL);
-            makeGreyScaleCopy(colorImage);
+
+            if (greyScaleThread != null)
+                greyScaleThread.interrupt();
+
+            // load greyscale on separate thread to not halt app. unless they wish to show greyscale image.
+            greyScaleThread = new Thread(() -> makeGreyScaleCopy(colorImage));
+            greyScaleThread.start();
+
             imageView.setImage(colorImage);
             Platform.runLater(() -> sessionProgressLabel.setText("%d / %d".formatted(index + 1, settings.imageSources().length)));
             resetImage();
@@ -384,27 +397,22 @@ public class SessionSceneController {
         double LowerBoundY = Math.max((imageAnchorPane.getHeight() - imageHeight) / 2, 0);
         double UpperBoundY = Math.min(imageAnchorPane.getHeight(), (imageAnchorPane.getHeight() + imageHeight) / 2);
 
-
         double imageMinY = imageView.getBoundsInParent().getMinY(); // top
         double imageMaxY = imageView.getBoundsInParent().getMaxY(); // bottom
         double imageMinX = imageView.getBoundsInParent().getMinX(); // lhs
         double imageMaxX = imageView.getBoundsInParent().getMaxX(); // rhs
 
-        if (imageMinY > LowerBoundY) {
+        if (imageMinY > LowerBoundY)
             imageView.setY(imageView.getY() - (imageMinY - LowerBoundY));
-        }
 
-        if (imageMaxY < UpperBoundY) {
+        if (imageMaxY < UpperBoundY)
             imageView.setY(imageView.getY() + (UpperBoundY - imageMaxY));
-        }
 
-        if (imageMinX > LowerBoundX) {
+        if (imageMinX > LowerBoundX)
             imageView.setX(imageView.getX() - (imageMinX - LowerBoundX));
-        }
 
-        if (imageMaxX < UpperBoundX) {
+        if (imageMaxX < UpperBoundX)
             imageView.setX(imageView.getX() + (UpperBoundX - imageMaxX));
-        }
     }
 
     private void resetImage() {

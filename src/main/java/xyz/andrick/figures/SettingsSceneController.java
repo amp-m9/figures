@@ -15,12 +15,13 @@ import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class SettingsSceneController implements Initializable {
     private Stage stage;
@@ -38,6 +39,8 @@ public class SettingsSceneController implements Initializable {
     @FXML
     private Label filesFoundLabel;
     @FXML
+    private Label subDirectoryLabel;
+    @FXML
     private Spinner<Double> imageDurationSpinner;
     @FXML
     private Spinner<Double> breakDurationSpinner;
@@ -45,6 +48,8 @@ public class SettingsSceneController implements Initializable {
     private Spinner<Integer> imagesBetweenBreaksSpinner;
     @FXML
     private Spinner<Integer> figureCountSpinner;
+    @FXML
+    private ToggleButton subDirectoryToggle;
     @FXML
     private ToggleButton breakMinutesToggle;
     @FXML
@@ -62,22 +67,12 @@ public class SettingsSceneController implements Initializable {
         setUpDoubleSpinner(breakDurationSpinner, 5);
         setUpIntegerSpinner(imagesBetweenBreaksSpinner, 10);
         setUpIntegerSpinner(figureCountSpinner, 20);
+        setUpToggles();
+        setUpBrowseButton();
+    }
 
-        breakTimeToggleGroup.selectedToggleProperty().addListener((obsVal, oldVal, newVal) -> {
-            if (newVal == null)
-                oldVal.setSelected(true);
-        });
-        imageTimeToggleGroup.selectedToggleProperty().addListener((obsVal, oldVal, newVal) -> {
-            if (newVal == null)
-                oldVal.setSelected(true);
-        });
-
-        shuffleButton.selectedProperty().addListener(((obsVal, oldVal, newVal) ->{
-            Platform.runLater(()->shuffleLabel.setText(newVal?"shuffle on":""));
-        } ));
-
-        shuffleButton.setSelected(true);
-        browseButton.setOnAction(event -> onBrowseButtonPress(event));
+    private void setUpBrowseButton() {
+        browseButton.setOnAction(this::onBrowseButtonPress);
         startSessionButton.setOnAction(event -> {
             try {
                 onStartPressed(event);
@@ -85,6 +80,29 @@ public class SettingsSceneController implements Initializable {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    private void setUpToggles() {
+        breakTimeToggleGroup.selectedToggleProperty().addListener((obsVal, oldVal, newVal) -> {
+            if (newVal == null)
+                oldVal.setSelected(true);
+        });
+
+        imageTimeToggleGroup.selectedToggleProperty().addListener((obsVal, oldVal, newVal) -> {
+            if (newVal == null)
+                oldVal.setSelected(true);
+        });
+
+        subDirectoryToggle.selectedProperty().addListener(((obsVal, oldVal, newVal) -> Platform.runLater(()-> {
+            subDirectoryLabel.setText(newVal ? "on" : "off");
+            onImageDirectoryChanged(imageDirectoryTextField.getText());
+            allFieldsValid();
+        })));
+        subDirectoryToggle.setSelected(false);
+        subDirectoryLabel.setText("off");
+
+        shuffleButton.selectedProperty().addListener(((obsVal, oldVal, newVal) -> Platform.runLater(()->shuffleLabel.setText(newVal?"shuffle on":""))));
+        shuffleButton.setSelected(true);
 
     }
 
@@ -175,34 +193,37 @@ public class SettingsSceneController implements Initializable {
         SessionSettings settings = new SessionSettings(
                 imageDurationSpinnerValue,
                 breakDurationSpinnerValue,
-                imageDirectoryTextField.getText(),
                 imagesBetweenBreaksSpinner.getValue(),
                 getFilePaths(),
                 ((Node) event.getSource()).getScene(),
                 stage
         );
+
         sessionSceneController.setupSession(settings);
         stage.setTitle("Figures: Drawing session");
         stage.show();
     }
 
     private String[] getFilePaths() {
-        String[] filePaths = new String[figureCountSpinner.getValue()];
-        System.arraycopy(getImagesInDirectory(imageDirectoryTextField.getText()), 0, filePaths, 0, figureCountSpinner.getValue());
-        if (!shuffleButton.isSelected())
-            return filePaths;
+        Integer maxFigures = figureCountSpinner.getValue();
+        String[] filePathArray = new String[maxFigures];
+        List<String> filePathList = getImagesInDirectory(imageDirectoryTextField.getText());
 
-        List<String> pathList = Arrays.asList(filePaths);
-        Collections.shuffle(pathList);
-        pathList.toArray(filePaths);
-        return filePaths;
+        if (!shuffleButton.isSelected()) {
+            System.arraycopy(filePathList.toArray(new String[0]), 0, filePathArray, 0, maxFigures);
+            return filePathArray;
+        }
+
+        Collections.shuffle(filePathList);
+        filePathList.subList(0, maxFigures).toArray(filePathArray);
+        return filePathArray;
     }
 
     private void setupSessionSceneAndController() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("session-view.fxml"));
         Parent root = loader.load();
         sessionScene = new Scene(root);
-        sessionScene.getStylesheets().add(getClass().getResource("session.css").toExternalForm());
+        sessionScene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("session.css")).toExternalForm());
 
         if (sessionSceneController != loader.getController() ){
             sessionSceneController = loader.getController();
@@ -213,12 +234,11 @@ public class SettingsSceneController implements Initializable {
     }
 
     private boolean allFieldsValid() {
-        boolean validDirectory = doesDirectoryExist(imageDirectoryTextField.getText());
+        boolean validDirectory = doesDirectoryExist(imageDirectoryTextField.getText()) && getImagesInDirectory(imageDirectoryTextField.getText()).size()>0;
         boolean validImageDuration = isDouble(imageDurationSpinner.getEditor().getText());
         boolean validBreakDuration = isDouble(breakDurationSpinner.getEditor().getText());
         boolean validBreak = isValidNaturalNumber(imagesBetweenBreaksSpinner.getEditor().getText());
         boolean validFigureCount = isValidNaturalNumber(figureCountSpinner.getEditor().getText());
-
         boolean allValid = validDirectory && validImageDuration && validBreakDuration && validBreak && validFigureCount;
         startSessionButton.setDisable(!allValid);
 
@@ -256,13 +276,20 @@ public class SettingsSceneController implements Initializable {
             filesFoundLabel.setText("Directory is invalid");
             return;
         }
-        int imageCount = getImagesInDirectory(newDirectory).length;
+
+        int imageCount = getImagesInDirectory(newDirectory).size();
         String imagesFoundString = "%d images found in directory".formatted(imageCount);
         filesFoundLabel.setText(imagesFoundString);
+
+        if(imageCount<1) {
+            return;
+        }
+
         figureCountSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, imageCount, imageCount, 1));
 
         int imagesBetween = imagesBetweenBreaksSpinner.getValue()>imageCount? imageCount: imagesBetweenBreaksSpinner.getValue();
         imagesBetweenBreaksSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, imageCount, imagesBetween, 1));
+
     }
 
     public void onBrowseButtonPress(ActionEvent event) {
@@ -280,24 +307,35 @@ public class SettingsSceneController implements Initializable {
         return new File(directory).exists();
     }
 
-    private String[] getImagesInDirectory(String folder) {
-        return getImagesInDirectory(new File(folder));
+    private List<String> getImagesInDirectory(String folder) {
+        try {
+            return getImagesInDirectory(new File(folder));
+        } catch (IOException e) {
+            return new ArrayList<>();
+        }
     }
 
-    private String[] getImagesInDirectory(File Directory) {
+    private List<String> getImagesInDirectory(File Directory) throws IOException {
         if (!Directory.exists())
-            return new String[]{};
+            return new ArrayList<>();
 
-        FilenameFilter imageFilter = new FilenameFilter() {
-            static final String regex = "([^\\s]+(\\.(?i)(jpg|png|bmp|jpeg))$)";
-            final Pattern pattern = Pattern.compile(regex);
+        List<String> filePaths = new ArrayList<>();
+        String regex = "([^\\s]+(\\.(?i)(jpg|png|bmp|jpeg))$)";
+        Stream<Path> walkStream;
 
-            @Override
-            public boolean accept(File dir, String name) {
-                return pattern.matcher(name.toLowerCase()).find();
-            }
-        };
+        if(subDirectoryToggle.selectedProperty().get())
+            walkStream = Files.walk(Directory.toPath());
+        else
+            walkStream = Files.walk(Directory.toPath(), 1);
 
-        return Directory.list(imageFilter);
+        walkStream.filter(p -> p.toFile().isFile())
+            .forEach(f -> {
+                if (f.toString().matches(regex)) {
+                    filePaths.add(f.toString());
+                }
+            });
+        return  filePaths;
     }
+
+
 }

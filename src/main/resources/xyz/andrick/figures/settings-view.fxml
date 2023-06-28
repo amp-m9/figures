@@ -15,42 +15,41 @@
 
 <AnchorPane fx:id="settingAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="520.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.andrick.figures.SettingsSceneController">
     <VBox layoutX="40.0" layoutY="60.0" prefHeight="333.0" prefWidth="555.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
-            <Text styleClass="title" text="Image Source:">
-                <VBox.margin>
-                    <Insets bottom="10.0" />
-                </VBox.margin>
-            </Text>
-            <HBox prefWidth="580.0" spacing="20.0">
-                    <Text styleClass="sub-title" text="File Location" />
-                    <Label fx:id="filesFoundLabel" styleClass="sub-title" />
-                <VBox.margin>
-                    <Insets bottom="5.0" />
-                </VBox.margin>
+        <Text styleClass="title" text="Image Source:">
+            <VBox.margin>
+                <Insets bottom="10.0" />
+            </VBox.margin>
+        </Text>
+        <HBox prefWidth="580.0" spacing="20.0">
+                <Text styleClass="sub-title" text="File Location" />
+                <Label fx:id="filesFoundLabel" styleClass="sub-title" />
+            <VBox.margin>
+                <Insets bottom="5.0" />
+            </VBox.margin>
+        </HBox>
+        <VBox spacing="5.0">
+            <HBox spacing="30.0" >
+                <TextField fx:id="imageDirectoryTextField" HBox.hgrow="ALWAYS" />
+                <Button fx:id="browseButton" minWidth="45.0" mnemonicParsing="false" prefWidth="94.0" text="Browse" />
             </HBox>
-        <HBox spacing="30.0" style="-fx-border-radius: 30;">
-            <TextField fx:id="imageDirectoryTextField" HBox.hgrow="ALWAYS" />
-            <Button fx:id="browseButton" minWidth="45.0" mnemonicParsing="false" prefWidth="94.0" text="Browse" />
+            <HBox spacing="5.0" alignment="CENTER_LEFT">
+                <Text styleClass="sub-title" text="browse sub-directories?"/>
+                <ToggleButton styleClass="small-toggle" fx:id="subDirectoryToggle" mnemonicParsing="false" />
+                <Label fx:id="subDirectoryLabel" styleClass="sub-title" />
+            </HBox>
             <VBox.margin>
                 <Insets bottom="20.0" />
             </VBox.margin>
-        </HBox>
+        </VBox>
         <HBox alignment="CENTER_LEFT" spacing="15.0">
-            <Text styleClass="title" text="Session Settings">
-                <VBox.margin>
-                    <Insets bottom="10.0" />
-                </VBox.margin>
-            </Text>
+            <Text styleClass="title" text="Session Settings"/>
             <ToggleButton fx:id="shuffleButton" mnemonicParsing="false" />
             <Label fx:id="shuffleLabel" styleClass="sub-title" />
         </HBox>
 
         <HBox>
             <VBox prefWidth="239.0" HBox.hgrow="NEVER">
-                <Text styleClass="sub-title" text="Time per figure">
-                    <VBox.margin>
-                        <Insets bottom="5.0" />
-                    </VBox.margin>
-                </Text>
+                <Text styleClass="sub-title" text="Time per figure"/>
                 <HBox>
                     <Spinner fx:id="imageDurationSpinner" editable="true" maxWidth="Infinity" HBox.hgrow="NEVER" />
                     <HBox alignment="TOP_RIGHT" HBox.hgrow="NEVER">
