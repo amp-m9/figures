@@ -9,6 +9,9 @@ You can simply download the app for your platform from the
 [releases page](https://github.com/amp-m9/figures/releases) if available, alternatively
 you can [build it yourself](https://github.com/amp-m9/figures#build-with-maven-and-warp-packer).
 
+Once acquired you can also get some **free reference photos** from [reference.pictures/free/](https://reference.pictures/free/) 
+to use with the app 😁.
+
 ## App demo.
 https://github.com/amp-m9/figures/assets/31145121/2f309cd6-640f-4eee-9e9a-049b4be70971
 
