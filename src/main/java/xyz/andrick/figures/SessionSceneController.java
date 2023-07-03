@@ -262,7 +262,7 @@ public class SessionSceneController {
         String fileString = settings.imageSources()[index % settings.imageSources().length];
         File imageFile = new File(fileString);
         if (!imageFile.exists()) {
-            displayImageError(fileString);
+            printImageError(fileString);
             return;
         }
         try {
@@ -275,14 +275,14 @@ public class SessionSceneController {
             // load greyscale on separate thread to not halt app. unless they wish to show greyscale image.
             greyScaleThread = new Thread(() -> makeGreyScaleCopy(colorImage));
             greyScaleThread.start();
-
+            
             imageView.setImage(colorImage);
             Platform.runLater(() -> sessionProgressLabel.setText("%d / %d".formatted(index + 1, settings.imageSources().length)));
             resetImage();
             keepImageInFrame();
             greyscaleButton.setSelected(false);
         } catch (MalformedURLException e) {
-            displayImageError(fileString);
+            printImageError(fileString);
         }
     }
 
@@ -375,7 +375,7 @@ public class SessionSceneController {
         timer.start();
     }
 
-    private void displayImageError(String fileString) {
+    private void printImageError(String fileString) {
         System.out.printf("Cannot display image %s%n", fileString);
     }
 
