@@ -7,8 +7,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.shape.FillRule;
+import javafx.scene.shape.SVGPath;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import net.synedra.validatorfx.Check;
@@ -28,6 +31,7 @@ public class SettingsSceneController implements Initializable {
     private Scene sessionScene;
     private SessionSceneController sessionSceneController;
     private final Validator validator = new Validator();
+    private String toolTipPathString = "M61 122C94.6894 122 122 94.6894 122 61C122 27.3106 94.6894 0 61 0C27.3106 0 0 27.3106 0 61C0 94.6894 27.3106 122 61 122ZM52.746 80.8551V81.4091H63.8255V80.8551C63.8871 77.0388 64.2872 73.8535 65.0258 71.299C65.7645 68.7446 66.9494 66.544 68.5805 64.6974C70.2117 62.8201 72.3814 61.035 75.0898 59.3423C77.7981 57.6804 80.1063 55.7723 82.0145 53.6179C83.9534 51.4636 85.4307 49.0168 86.4463 46.2777C87.4927 43.5386 88.0159 40.4763 88.0159 37.0909C88.0159 32.2898 86.9079 28.0118 84.692 24.2571C82.5069 20.5024 79.3985 17.5478 75.3667 15.3934C71.3658 13.2391 66.657 12.1619 61.2403 12.1619C56.2545 12.1619 51.715 13.1468 47.6217 15.1165C43.5592 17.0862 40.2815 19.933 37.7886 23.657C35.3265 27.3809 33.9723 31.8589 33.7261 37.0909H45.3596C45.6059 33.4593 46.5138 30.5201 48.0834 28.2734C49.653 26.0267 51.6073 24.3802 53.9463 23.3338C56.2853 22.2874 58.7166 21.7642 61.2403 21.7642C64.1333 21.7642 66.7647 22.3643 69.1345 23.5646C71.5043 24.7649 73.397 26.473 74.8128 28.6889C76.2285 30.9048 76.9363 33.5208 76.9363 36.5369C76.9363 38.9683 76.5055 41.1842 75.6437 43.1846C74.8128 45.1851 73.674 46.9548 72.2275 48.4936C70.781 50.0016 69.1499 51.3096 67.3341 52.4176C64.318 54.2334 61.7327 56.2185 59.5784 58.3729C57.424 60.5272 55.7621 63.3433 54.5926 66.821C53.4231 70.2988 52.8076 74.9768 52.746 80.8551ZM52.7922 106.292C54.4233 107.923 56.3776 108.739 58.6551 108.739C60.1939 108.739 61.5789 108.369 62.8099 107.631C64.0718 106.861 65.072 105.846 65.8106 104.584C66.58 103.322 66.9648 101.937 66.9648 100.429C66.9648 98.1515 66.1492 96.1972 64.518 94.566C62.8869 92.9349 60.9326 92.1193 58.6551 92.1193C56.3776 92.1193 54.4233 92.9349 52.7922 94.566C51.161 96.1972 50.3454 98.1515 50.3454 100.429C50.3454 102.706 51.161 104.661 52.7922 106.292Z";
     @FXML
     private Button startSessionButton;
     @FXML
@@ -60,6 +64,13 @@ public class SettingsSceneController implements Initializable {
     private ToggleGroup breakTimeToggleGroup;
     @FXML
     private ToggleGroup imageTimeToggleGroup;
+    @FXML
+    private AnchorPane directoryToolTip;
+    @FXML
+    private AnchorPane figuresBetweenBreaksToolTip;
+    @FXML
+    private AnchorPane figureCountToolTip;
+    private SVGPath toolTipSvg;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
         directoryValidation();
@@ -69,7 +80,34 @@ public class SettingsSceneController implements Initializable {
         setUpIntegerSpinner(figureCountSpinner, 20);
         setUpToggles();
         setUpBrowseButton();
+        setUpToolTips();
     }
+
+    private void setUpToolTips() {
+        toolTipSvg = new SVGPath();
+        toolTipSvg.setContent(toolTipPathString);
+        toolTipSvg.setFillRule(FillRule.EVEN_ODD);
+
+        String directoryMessage = "Enter the path for a directory containing the images.\n" +
+                "Figures supports the following image types:" +
+                "\n\t- jpg/jpeg" +
+                "\n\t- png" +
+                "\n\t- bmp";
+
+        String figureCountMessage = "Total images for this session";
+        String figuresBetweenBreaksMessage = "How many images between breaks";
+
+        setAnchorPaneToolTip(directoryToolTip, directoryMessage);
+        setAnchorPaneToolTip(figureCountToolTip, figureCountMessage);
+        setAnchorPaneToolTip(figuresBetweenBreaksToolTip, figuresBetweenBreaksMessage);
+    }
+
+    private void setAnchorPaneToolTip(AnchorPane pane, String message) {
+        pane.shapeProperty().set(toolTipSvg);
+        Tooltip tooltip = new Tooltip(message);
+        Tooltip.install(pane, tooltip);
+    }
+
 
     private void setUpBrowseButton() {
         browseButton.setOnAction(this::onBrowseButtonPress);

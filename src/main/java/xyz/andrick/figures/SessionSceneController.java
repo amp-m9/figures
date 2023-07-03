@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Tooltip;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
@@ -15,7 +16,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Arc;
+import javafx.scene.shape.FillRule;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -36,48 +39,51 @@ public class SessionSceneController {
     private Line[] verticalGridLines;
     private Line[] horizontalGridLines;
     @FXML
-    AnchorPane imageAnchorPane;
+    private AnchorPane imageAnchorPane;
     @FXML
-    AnchorPane baseAnchorPane;
+    private AnchorPane baseAnchorPane;
     @FXML
-    AnchorPane breakAnchorPane;
+    private AnchorPane breakAnchorPane;
     @FXML
-    AnchorPane pauseAnchorPane;
+    private AnchorPane pauseAnchorPane;
     @FXML
-    ImageView imageView;
+    private ImageView imageView;
     @FXML
-    Button quitButton;
+    private Button quitButton;
     @FXML
-    Button pauseButton;
+    private Button pauseButton;
     @FXML
-    Button nextButton;
+    private Button nextButton;
     @FXML
-    Button previousButton;
+    private Button previousButton;
     @FXML
-    Button breakQuitButton;
+    private Button breakQuitButton;
     @FXML
-    Button breakResumeButton;
+    private Button breakResumeButton;
     @FXML
-    Button pauseQuitButton;
+    private Button pauseQuitButton;
     @FXML
-    Button pauseResumeButton;
+    private Button pauseResumeButton;
     @FXML
-    ToggleButton greyscaleButton;
+    private ToggleButton greyscaleButton;
     @FXML
-    ToggleButton gridButton;
+    private ToggleButton gridButton;
     @FXML
-    Label breakTimeLabel;
+    private Label breakTimeLabel;
     @FXML
-    Label pauseTimeLabel;
+    private Label pauseTimeLabel;
     @FXML
-    Label sessionProgressLabel;
+    private Label sessionProgressLabel;
     @FXML
-    Text pauseText;
+    private Text pauseText;
     @FXML
-    Text breakText;
+    private Text breakText;
     @FXML
-    Arc timerArc;
-
+    private Arc timerArc;
+    @FXML
+    private SVGPath grayScaleSVG;
+    @FXML
+    private AnchorPane grayScaleButtonAnchorPane;
     @FXML
     public void initialize() {
         breakAnchorPane.setVisible(false);
@@ -87,6 +93,14 @@ public class SessionSceneController {
         setUpImageView();
         setUpButtons();
         setUpGridLines();
+        setUpToolTips();
+    }
+
+    private void setUpToolTips() {
+        Tooltip grayscaleToolTip = new Tooltip("Toggle grayscale");
+        Tooltip gridToolTip = new Tooltip("Toggle grid");
+        greyscaleButton.setTooltip(grayscaleToolTip);
+        gridButton.setTooltip(gridToolTip);
     }
 
     private void setUpButtons() {
