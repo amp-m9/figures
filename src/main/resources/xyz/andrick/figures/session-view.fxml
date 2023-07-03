@@ -30,8 +30,6 @@
                   <Button fx:id="previousButton" styleClass="primary-button" />
                   <Button fx:id="pauseButton" styleClass="primary-button" />
                   <Button fx:id="nextButton" styleClass="primary-button" />
-<!--     TO:DO: features below not yet present-->
-<!--                  <Button fx:id="gridButton" styleClass="primary-button" />-->
                   <ToggleButton fx:id="greyscaleButton" styleClass="primary-button" />
                   <ToggleButton fx:id="gridButton" styleClass="primary-button" />
                <HBox.margin>

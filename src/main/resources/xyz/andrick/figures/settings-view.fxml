@@ -20,21 +20,27 @@
                 <Insets bottom="10.0" />
             </VBox.margin>
         </Text>
-        <HBox prefWidth="580.0" spacing="20.0">
-                <Text styleClass="sub-title" text="File Location" />
-                <Label fx:id="filesFoundLabel" styleClass="sub-title" />
+        <HBox alignment="CENTER_LEFT" prefWidth="580.0" spacing="20.0">
+            <Text styleClass="sub-title" text="File Location" />
+            <AnchorPane fx:id="directoryToolTip" styleClass="tool-tip-image">
+                <HBox.margin>
+                    <Insets left="-15.0" />
+                </HBox.margin>
+            </AnchorPane>
+            <Label fx:id="filesFoundLabel" styleClass="sub-title" />
+
             <VBox.margin>
                 <Insets bottom="5.0" />
             </VBox.margin>
         </HBox>
         <VBox spacing="5.0">
-            <HBox spacing="30.0" >
+            <HBox spacing="30.0">
                 <TextField fx:id="imageDirectoryTextField" HBox.hgrow="ALWAYS" />
                 <Button fx:id="browseButton" minWidth="45.0" mnemonicParsing="false" prefWidth="94.0" text="Browse" />
             </HBox>
-            <HBox spacing="5.0" alignment="CENTER_LEFT">
-                <Text styleClass="sub-title" text="browse sub-directories?"/>
-                <ToggleButton styleClass="small-toggle" fx:id="subDirectoryToggle" mnemonicParsing="false" />
+            <HBox alignment="CENTER_LEFT" spacing="5.0">
+                <Text styleClass="sub-title" text="browse sub-directories?" />
+                <ToggleButton fx:id="subDirectoryToggle" mnemonicParsing="false" styleClass="small-toggle" />
                 <Label fx:id="subDirectoryLabel" styleClass="sub-title" />
             </HBox>
             <VBox.margin>
@@ -42,14 +48,18 @@
             </VBox.margin>
         </VBox>
         <HBox alignment="CENTER_LEFT" spacing="15.0">
-            <Text styleClass="title" text="Session Settings"/>
+            <Text styleClass="title" text="Session Settings" />
             <ToggleButton fx:id="shuffleButton" mnemonicParsing="false" />
             <Label fx:id="shuffleLabel" styleClass="sub-title" />
         </HBox>
 
         <HBox>
             <VBox prefWidth="239.0" HBox.hgrow="NEVER">
-                <Text styleClass="sub-title" text="Time per figure"/>
+                <Text styleClass="sub-title" text="Time per figure">
+                    <VBox.margin>
+                        <Insets bottom="5.0" />
+                    </VBox.margin>
+                </Text>
                 <HBox>
                     <Spinner fx:id="imageDurationSpinner" editable="true" maxWidth="Infinity" HBox.hgrow="NEVER" />
                     <HBox alignment="TOP_RIGHT" HBox.hgrow="NEVER">
@@ -67,11 +77,13 @@
             </VBox>
             <Pane HBox.hgrow="ALWAYS" />
             <VBox HBox.hgrow="NEVER">
-                <Text styleClass="sub-title" text="Number of figures" VBox.vgrow="NEVER">
+                <HBox alignment="CENTER_LEFT" spacing="5.0">
+                    <Text styleClass="sub-title" text="Number of figures"/>
                     <VBox.margin>
                         <Insets bottom="5.0" />
                     </VBox.margin>
-                </Text>
+                    <AnchorPane fx:id="figureCountToolTip" styleClass="tool-tip-image"/>
+                </HBox>
                 <Spinner fx:id="figureCountSpinner" editable="true" />
                 <HBox.margin>
                     <Insets />
@@ -81,8 +93,6 @@
                 <Insets bottom="20.0" />
             </VBox.margin>
         </HBox>
-
-
             <HBox>
                 <VBox prefWidth="239.0" HBox.hgrow="NEVER">
                     <Text styleClass="sub-title" text="Break duration">
@@ -107,15 +117,14 @@
                 </VBox>
                 <Pane HBox.hgrow="ALWAYS" />
                 <VBox HBox.hgrow="NEVER">
-                    <Text styleClass="sub-title" text="Photos until next break" VBox.vgrow="NEVER">
+                    <HBox alignment="CENTER_LEFT" spacing="5.0">
+                        <Text styleClass="sub-title" text="Fig. between breaks"/>
                         <VBox.margin>
                             <Insets bottom="5.0" />
                         </VBox.margin>
-                    </Text>
+                        <AnchorPane fx:id="figuresBetweenBreaksToolTip" styleClass="tool-tip-image"/>
+                    </HBox>
                     <Spinner fx:id="imagesBetweenBreaksSpinner" editable="true" />
-                    <HBox.margin>
-                        <Insets />
-                    </HBox.margin>
                 </VBox>
                 <VBox.margin>
                     <Insets bottom="20.0" />

@@ -142,3 +142,13 @@
 .spinner .decrement-arrow-button{
     -fx-border-width:1 1 0 1;
 }
+.tool-tip-image{
+    -fx-max-width: 12;
+    -fx-min-width: 12;
+    -fx-max-height: 12;
+    -fx-min-height: 12;
+    -fx-background-color: #CECECE;
+    -fx-border-width: 0;
+}.tool-tip-image:hover{
+    -fx-background-color: #8a8a8a;
+}
