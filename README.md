@@ -46,6 +46,7 @@ Windows install requires a bit more work.
       ```
 - run the following
   ```shell
+  mkdir release
   warp-packer --arch windows-x64 -i ./target/figures/ --exec bin/figures.bat --output ./release/figures.exe
   ```
 now find figures.exe in the releases foler of the project :) 
