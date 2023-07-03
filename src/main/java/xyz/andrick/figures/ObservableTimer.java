@@ -105,12 +105,7 @@ public class ObservableTimer {
         return timeElapsed.get();
     }
 
-    public void killAll() {
-        executorService.shutdownNow();
-        timerService.shutdownNow();
-    }
-
-    public void setUserTickFunction(Runnable userTickFunction) {
+    public void setTimeOutFunction(Runnable userTickFunction) {
         this.userTickFunction = userTickFunction;
     }
 
