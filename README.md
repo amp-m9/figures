@@ -4,13 +4,12 @@
 Figure drawing class application written in Java using JavaFX for the UI. Will use an 
 image folder the user points to as image source. Still in early alpha.
 
-## Install/use
-You can simply download the app for your platform from the 
-[releases page](https://github.com/amp-m9/figures/releases) if available, alternatively
-you can [build it yourself](https://github.com/amp-m9/figures#build-with-maven-and-warp-packer).
-
 Once acquired you can also get some **free reference photos (some NSFW)** from [reference.pictures/free/](https://reference.pictures/free/) 
 to use with the app.
+___________________________________________________________________________________________________
+- [Screenshots](#screenshots)
+- [Download](#download)
+- [Build](#build-with-maven-and-warp-packer)
 
 ## Screenshots
 ### Start screen
@@ -26,6 +25,19 @@ to use with the app.
 ### Break screen
 ![image](https://github.com/amp-m9/figures/assets/31145121/31d24a29-0c2c-433d-9107-6dc8a16d7241)
 
+## Download
+You can simply download the app for your platform from the 
+[releases page](https://github.com/amp-m9/figures/releases) if on Linux/Windows, alternatively
+you can [build it yourself](https://github.com/amp-m9/figures#build-with-maven-and-warp-packer).
+
+**NOTE LINUX USERS**: If on Linux **you have to mark it as executable in the terminal** in order to use it by running 
+```
+sudo chmod +x figures_linux_x64
+```
+where you have downloaded the executable.
+
+Once acquired you can also get some **free reference photos (some NSFW)** from [reference.pictures/free/](https://reference.pictures/free/) 
+to use with the app.
 
 ## Build with maven and warp-packer.
 ### prerequisites
