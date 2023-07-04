@@ -12,8 +12,20 @@ you can [build it yourself](https://github.com/amp-m9/figures#build-with-maven-a
 Once acquired you can also get some **free reference photos (some NSFW)** from [reference.pictures/free/](https://reference.pictures/free/) 
 to use with the app.
 
-## App demo.
-https://github.com/amp-m9/figures/assets/31145121/2f309cd6-640f-4eee-9e9a-049b4be70971
+## Screenshots
+### Start screen
+![image](https://github.com/amp-m9/figures/assets/31145121/6b49f14c-43f7-4334-bd95-36b195b72c1c)
+### Session
+![image](https://github.com/amp-m9/figures/assets/31145121/02d5719a-e720-43ff-8c5a-f496bdbc2d71)
+### Session: grid on 
+![image](https://github.com/amp-m9/figures/assets/31145121/58c7c663-2180-41bd-aaac-c591c24b3460)
+### Session: grayscale mode
+![image](https://github.com/amp-m9/figures/assets/31145121/7555c2bb-8428-49b0-9d60-d1dfa60c5968)
+### Pause screen
+![image](https://github.com/amp-m9/figures/assets/31145121/bafebd12-72b0-452f-9069-8dadde5d1889)
+### Break screen
+![image](https://github.com/amp-m9/figures/assets/31145121/31d24a29-0c2c-433d-9107-6dc8a16d7241)
+
 
 ## Build with maven and warp-packer.
 ### prerequisites
