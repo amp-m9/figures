@@ -1,4 +1,4 @@
-package xyz.andrick.figures;
+package xyz.andrick.figures.records;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;

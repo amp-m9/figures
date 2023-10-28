@@ -1,4 +1,4 @@
-package xyz.andrick.figures;
+package xyz.andrick.figures.utilities;
 
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;

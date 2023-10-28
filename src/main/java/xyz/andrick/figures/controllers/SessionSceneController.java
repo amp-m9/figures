@@ -1,4 +1,4 @@
-package xyz.andrick.figures;
+package xyz.andrick.figures.controllers;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -16,11 +16,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Arc;
-import javafx.scene.shape.FillRule;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import xyz.andrick.figures.utilities.ObservableTimer;
+import xyz.andrick.figures.records.SessionSettings;
 
 import java.io.File;
 import java.net.MalformedURLException;

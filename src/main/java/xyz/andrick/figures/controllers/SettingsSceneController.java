@@ -1,4 +1,4 @@
-package xyz.andrick.figures;
+package xyz.andrick.figures.controllers;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -16,6 +16,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import net.synedra.validatorfx.Check;
 import net.synedra.validatorfx.Validator;
+import xyz.andrick.figures.records.SessionSettings;
 
 import java.io.File;
 import java.io.IOException;
