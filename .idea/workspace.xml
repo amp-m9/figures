@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="cb0e18ff-0fec-452b-8323-40eb8341c0e7" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/PexelImageBrowseController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/PexelSearchController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/records/PexelImage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/records/PexelResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/SettingsSceneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/SettingsSceneController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/xyz/andrick/figures/session-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/xyz/andrick/figures/session-view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/xyz/andrick/figures/settings-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/xyz/andrick/figures/settings-view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/xyz/andrick/figures/settings.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/xyz/andrick/figures/settings.css" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="FormatOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="Use Maven wrapper" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="OptimizeOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 7
+}]]></component>
+  <component name="ProjectId" id="2XRisSf9aNptgtKGc1UNtLV4hmf" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "pexel-integration",
+    "settings.editor.selected.configurable": "preferences.keymap"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="xyz.andrick.figures.FiguresApplication" />
+      <module name="figures" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="cb0e18ff-0fec-452b-8323-40eb8341c0e7" name="Changes" comment="" />
+      <created>1698598504268</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1698598504268</updated>
+    </task>
+    <servers />
+  </component>
+</project>

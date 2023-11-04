@@ -3,6 +3,8 @@ module xyz.andrick.figures {
     requires javafx.fxml;
     requires net.synedra.validatorfx;
     requires java.desktop;
+    requires java.net.http;
+    requires com.google.gson;
     opens xyz.andrick.figures to javafx.fxml;
     exports xyz.andrick.figures;
     exports xyz.andrick.figures.controllers;

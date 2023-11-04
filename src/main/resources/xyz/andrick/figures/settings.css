@@ -40,19 +40,22 @@
    -fx-background-color:#3281DE;
 }
 
-.toggle-button{
+.mini-toggle{
     -fx-min-height: 35;
     -fx-max-height: 35;
     -fx-max-width: 55;
     -fx-min-width: 55;
+}
+.toggle-button{
+    -fx-min-height: 35;
+    -fx-max-height: 35;
     -fx-background-color: #F2F2F2;
     -fx-border-color: #CECECE;
     -fx-background-insets: 0;
     -fx-text-fill: #5A5A5A;
     -fx-font: normal normal 15px "Inter Regular";
 }
-
-.left-toggle{
+.middle-toggle{
     -fx-border-radius:	0 0 0 0;
     -fx-background-radius: 0;
     -fx-border-width: 1.5px 0 1.5px 0;
@@ -64,23 +67,32 @@
     -fx-border-width: 1.5px 1.5px 1.5px 0;
 }
 
+.left-toggle{
+    -fx-background-radius: 3px 0 0 3px;
+    -fx-border-radius:	3px 0 0 3px;
+    -fx-border-width: 1.5px 0 1.5px 1.5px ;
+}
+
 .toggle-button:hover, .button:hover{
     -fx-text-fill: #0075FF;
 }
 
-.toggle-button:selected, .small-toggle{
+.toggle-button:selected, .check-box-toggle{
     -fx-border-color: #CECECE;
     -fx-text-fill: white;
     -fx-background-color: #0075FF;
 }
-.left-toggle:selected{
-    -fx-border-width: 0px 1.5px 0 0;
+.middle-toggle:selected{
+    -fx-border-width: 0px 1.5px 0 1.5px;
 }
 .right-toggle:selected{
     -fx-border-width: 0 0 0 1.5px;
 }
+.left-toggle:selected{
+    -fx-border-width: 0 1.5px 0 0;
+}
 
-.small-toggle{
+.check-box-toggle{
     -fx-min-height: 14;
     -fx-max-height: 14;
     -fx-min-width: 14;
