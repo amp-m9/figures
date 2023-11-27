@@ -5,16 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cb0e18ff-0fec-452b-8323-40eb8341c0e7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/PexelImageBrowseController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/PexelSearchController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/records/PexelImage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/records/PexelResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/components/ImageSelectVbox.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/utilities/Helpers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/PexelImageBrowseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/PexelImageBrowseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/PexelSearchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/PexelSearchController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/SessionSceneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/SessionSceneController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/SettingsSceneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/SettingsSceneController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/xyz/andrick/figures/session-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/xyz/andrick/figures/session-view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/xyz/andrick/figures/settings-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/xyz/andrick/figures/settings-view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/xyz/andrick/figures/settings.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/xyz/andrick/figures/settings.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/xyz/andrick/figures/pexel-image-select-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/xyz/andrick/figures/pexel-image-select-view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,23 +46,23 @@
   <component name="OptimizeOnSaveOptions">
     <option name="myRunOnSave" value="true" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 7
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2XRisSf9aNptgtKGc1UNtLV4hmf" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "pexel-integration",
-    "settings.editor.selected.configurable": "preferences.keymap"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;pexel-integration&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="xyz.andrick.figures.FiguresApplication" />
