@@ -5,15 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cb0e18ff-0fec-452b-8323-40eb8341c0e7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/components/ImageSelectVbox.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/utilities/Helpers.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/PexelImageBrowseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/PexelImageBrowseController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/PexelSearchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/PexelSearchController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/SessionSceneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/SessionSceneController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/SettingsSceneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/SettingsSceneController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/xyz/andrick/figures/pexel-image-select-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/xyz/andrick/figures/pexel-image-select-view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/components/ImageSelectVbox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/components/ImageSelectVbox.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
