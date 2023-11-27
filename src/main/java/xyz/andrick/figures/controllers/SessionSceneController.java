@@ -20,11 +20,13 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import xyz.andrick.figures.utilities.ObservableTimer;
 import xyz.andrick.figures.records.SessionSettings;
+import xyz.andrick.figures.utilities.ObservableTimer;
 
 import java.io.File;
 import java.net.MalformedURLException;
+
+import static xyz.andrick.figures.utilities.Helpers.keepImageWithinParentBounds;
 
 
 public class SessionSceneController {
@@ -85,6 +87,7 @@ public class SessionSceneController {
     private SVGPath grayScaleSVG;
     @FXML
     private AnchorPane grayScaleButtonAnchorPane;
+
     @FXML
     public void initialize() {
         breakAnchorPane.setVisible(false);
@@ -155,14 +158,14 @@ public class SessionSceneController {
         }
     }
 
-    public void updateGridLines(){
+    public void updateGridLines() {
         if (imageAnchorPane == null)
             return;
 
         double width = imageAnchorPane.getWidth();
         double height = imageAnchorPane.getHeight();
 
-        for (int i = 0; i< horizontalGridLines.length; i++){
+        for (int i = 0; i < horizontalGridLines.length; i++) {
             horizontalGridLines[i].setStartX(0);
             horizontalGridLines[i].setEndX(width);
 
@@ -171,9 +174,9 @@ public class SessionSceneController {
             horizontalGridLines[i].setEndY(yCord);
         }
 
-        for (int i = 0; i< verticalGridLines.length; i++){
-            verticalGridLines[i]. setStartY(0);
-            verticalGridLines[i]. setEndY(height);
+        for (int i = 0; i < verticalGridLines.length; i++) {
+            verticalGridLines[i].setStartY(0);
+            verticalGridLines[i].setEndY(height);
 
             double xCord = (width / 3) + (width / 3) * i;
             verticalGridLines[i].setStartX(xCord);
@@ -183,7 +186,7 @@ public class SessionSceneController {
 
     private void toggleGreyscale(boolean selected) {
         if (selected) {
-            try{
+            try {
                 greyScaleThread.join();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
@@ -198,8 +201,8 @@ public class SessionSceneController {
         imageView.setPreserveRatio(true);
         imageView.fitHeightProperty().bind(imageAnchorPane.heightProperty());
         imageView.fitWidthProperty().bind(imageAnchorPane.widthProperty());
-        imageAnchorPane.widthProperty().addListener((obs, oldVal, newVal) -> keepImageInFrame());
-        imageAnchorPane.heightProperty().addListener((obs, oldVal, newVal) -> keepImageInFrame());
+        imageAnchorPane.widthProperty().addListener((obs, oldVal, newVal) -> keepImageWithinParentBounds(imageView, imageAnchorPane));
+        imageAnchorPane.heightProperty().addListener((obs, oldVal, newVal) -> keepImageWithinParentBounds(imageView, imageAnchorPane));
         imageAnchorPane.setOnMousePressed(this::onMousePressed);
         imageAnchorPane.setOnMouseDragged(this::onMouseDragged);
         imageAnchorPane.setOnScroll(this::zoomOnScroll);
@@ -290,11 +293,11 @@ public class SessionSceneController {
             // load greyscale on separate thread to not halt app. unless they wish to show greyscale image.
             greyScaleThread = new Thread(() -> makeGreyScaleCopy(colorImage));
             greyScaleThread.start();
-            
+
             imageView.setImage(colorImage);
             Platform.runLater(() -> sessionProgressLabel.setText("%d / %d".formatted(index + 1, settings.imageSources().length)));
             resetImage();
-            keepImageInFrame();
+            keepImageWithinParentBounds(imageView, imageAnchorPane);
             greyscaleButton.setSelected(false);
         } catch (MalformedURLException e) {
             printImageError(fileString);
@@ -324,7 +327,7 @@ public class SessionSceneController {
     public void onMouseDragged(MouseEvent mouseEvent) {
         imageView.setX(imageView.getX() + (mouseEvent.getSceneX() - startDragX));
         imageView.setY(imageView.getY() + (mouseEvent.getSceneY() - startDragY));
-        keepImageInFrame();
+        keepImageWithinParentBounds(imageView, imageAnchorPane);
         startDragX = mouseEvent.getSceneX();
         startDragY = mouseEvent.getSceneY();
     }
@@ -351,7 +354,7 @@ public class SessionSceneController {
         imageView.setScaleY(newScale);
 
         adjustMouseDelta(scrollEvent, TargetCursorDeltaX, TargetMouseDeltaY);
-        keepImageInFrame();
+        keepImageWithinParentBounds(imageView, imageAnchorPane);
     }
 
     private void onTick() {
@@ -403,32 +406,6 @@ public class SessionSceneController {
         stage.show();
     }
 
-    private void keepImageInFrame() {
-        double imageHeight = imageView.getBoundsInParent().getHeight();
-        double imageWidth = imageView.getBoundsInParent().getWidth();
-
-        double LowerBoundX = Math.max((imageAnchorPane.getWidth() - imageWidth) / 2, 0);
-        double UpperBoundX = Math.min(imageAnchorPane.getWidth(), (imageAnchorPane.getWidth() + imageWidth) / 2);
-        double LowerBoundY = Math.max((imageAnchorPane.getHeight() - imageHeight) / 2, 0);
-        double UpperBoundY = Math.min(imageAnchorPane.getHeight(), (imageAnchorPane.getHeight() + imageHeight) / 2);
-
-        double imageMinY = imageView.getBoundsInParent().getMinY(); // top
-        double imageMaxY = imageView.getBoundsInParent().getMaxY(); // bottom
-        double imageMinX = imageView.getBoundsInParent().getMinX(); // lhs
-        double imageMaxX = imageView.getBoundsInParent().getMaxX(); // rhs
-
-        if (imageMinY > LowerBoundY)
-            imageView.setY(imageView.getY() - (imageMinY - LowerBoundY));
-
-        if (imageMaxY < UpperBoundY)
-            imageView.setY(imageView.getY() + (UpperBoundY - imageMaxY));
-
-        if (imageMinX > LowerBoundX)
-            imageView.setX(imageView.getX() - (imageMinX - LowerBoundX));
-
-        if (imageMaxX < UpperBoundX)
-            imageView.setX(imageView.getX() + (UpperBoundX - imageMaxX));
-    }
 
     private void resetImage() {
         imageView.setX(0);
