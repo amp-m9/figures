@@ -13,4 +13,6 @@ module xyz.andrick.figures {
     opens xyz.andrick.figures.records to javafx.fxml;
     exports xyz.andrick.figures.utilities;
     opens xyz.andrick.figures.utilities to javafx.fxml;
+    exports xyz.andrick.figures.components;
+    opens xyz.andrick.figures.components to javafx.fxml;
 }
