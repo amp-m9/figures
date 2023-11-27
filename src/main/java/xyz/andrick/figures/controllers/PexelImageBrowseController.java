@@ -28,6 +28,30 @@ public class PexelImageBrowseController {
     @FXML
     TilePane resultsTilePane;
 
+    PexelResponse lastSearch;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        searchButton.setOnAction(this::search);
+        resultsTilePane.setPrefTileHeight(200);
+        resultsTilePane.setPrefTileWidth(240);
+        resultsTilePane.setHgap(10);
+        resultsTilePane.setVgap(10);
+    }
+
+    private void search(ActionEvent actionEvent) {
+        String query = queryTextField.getText();
+        if (query.length() == 0)
+            return;
+        try {
+            PexelResponse response = PexelSearchController.search(query);
+            populateResults(response.photos());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     public void init(PexelResponse response, String query) {
         queryTextField.setText(query);
 
