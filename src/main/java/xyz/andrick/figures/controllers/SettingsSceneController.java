@@ -147,9 +147,9 @@ public class SettingsSceneController implements Initializable {
             response = PexelSearchController.search(query);
             if (pexelImageSelectionStage == null || pexelImageSelectionScene == null)
                 setUpPexelImageSelectSceneandController();
+            pexelImageSelectionStage.show();
             pexelImageBrowseController.init(response, query);
             pexelImageSelectionStage.setTitle("Results for \"" + query + "\"");
-            pexelImageSelectionStage.show();
         } catch (Exception e) {
 
         }
