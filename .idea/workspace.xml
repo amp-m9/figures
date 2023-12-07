@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cb0e18ff-0fec-452b-8323-40eb8341c0e7" name="Changes" comment="">
+    <list default="true" id="cb0e18ff-0fec-452b-8323-40eb8341c0e7" name="Changes" comment="display images from pexel in columns">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/components/ImageSelectVbox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/components/ImageSelectVbox.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/PexelImageBrowseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/PexelImageBrowseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/xyz/andrick/figures/pexel-image-select-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/xyz/andrick/figures/pexel-image-select-view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,5 +88,20 @@
       <updated>1698598504268</updated>
     </task>
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="display images from pexel in columns" />
+    <option name="LAST_COMMIT_MESSAGE" value="display images from pexel in columns" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/xyz/andrick/figures/controllers/PexelImageBrowseController.java</url>
+          <line>101</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

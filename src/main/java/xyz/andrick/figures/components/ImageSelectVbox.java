@@ -26,15 +26,14 @@ public class ImageSelectVbox extends VBox {
     public ImageSelectVbox(PexelImage photo) {
         super();
         try {
-            Image image = new Image(getInputStreamFromUrl(photo.src().small()));
+            Image image = new Image(getInputStreamFromUrl(photo.src().medium()));
             if (image.isError()) {
                 throw new RuntimeException("Cannot load image");
             }
             imageView = new ImageView(image);
             imageView.setPreserveRatio(true);
+            imageView.fitWidthProperty().bind(widthProperty());
 
-            imagePane = new BorderPane();
-            imagePane.setCenter(imageView);
 
             label = new Label(photo.alt());
             label.setAlignment(Pos.TOP_CENTER);
@@ -42,9 +41,9 @@ public class ImageSelectVbox extends VBox {
             label.prefWidthProperty().bind(widthProperty());
             label.fontProperty().set(Font.font(fontSize));
             label.setPrefHeight(computeMinHeight(1));
-            getChildren().add(imagePane);
+            getChildren().add(imageView);
             getChildren().add(label);
-            setVgrow(imagePane, Priority.ALWAYS);
+            setVgrow(imageView, Priority.ALWAYS);
             setOnMouseClicked(this::onMouseClicked);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -54,5 +53,8 @@ public class ImageSelectVbox extends VBox {
 
     private void onMouseClicked(MouseEvent mouseEvent) {
         selected = !selected;
+        styleProperty().set(selected ? "-fx-background-color: blue" : "");
+        label.styleProperty().set(selected ? "-fx-background-color: green" : "");
+        imagePane.styleProperty().set(selected ? "-fx-background-color: red" : "");
     }
 }

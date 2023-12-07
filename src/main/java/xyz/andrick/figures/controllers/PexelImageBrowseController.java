@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -18,11 +19,14 @@ import xyz.andrick.figures.records.PexelResponse;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 
 public class PexelImageBrowseController implements Initializable {
-    int imageHeight = 250;
+    int imageWidth = 250;
+    int spacing = 10;
     @FXML
     TextField queryTextField;
     @FXML
@@ -32,18 +36,19 @@ public class PexelImageBrowseController implements Initializable {
     @FXML
     ScrollPane scrollPane;
     @FXML
-    VBox galleryVbox;
+    HBox galleryHbox;
     @FXML
     Pane imageBuffer;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        galleryHbox.setSpacing(spacing);
         searchButton.setOnAction(this::search);
     }
 
     private void search(ActionEvent actionEvent) {
         String query = queryTextField.getText();
-        if (query.length() == 0)
+        if (query.isEmpty())
             return;
         try {
             PexelResponse response = PexelSearchController.search(query);
@@ -60,7 +65,7 @@ public class PexelImageBrowseController implements Initializable {
     }
 
     public void populateResults(PexelImage[] photos) throws IOException {
-        galleryVbox.getChildren().clear();
+        galleryHbox.getChildren().clear();
         for (PexelImage photo : photos
         ) {
             String url = photo.src().medium();
@@ -74,8 +79,8 @@ public class PexelImageBrowseController implements Initializable {
                 continue;
             }
             var imageView = new ImageView(image);
-            imageView.setFitWidth(0);
-            imageView.setFitHeight(imageHeight);
+            imageView.setFitWidth(imageWidth);
+            imageView.setFitHeight(0);
             imageView.preserveRatioProperty().set(true);
             imageView.styleProperty().set("-fx-background-color: red");
             imageBuffer.getChildren().add(imageView);
@@ -84,21 +89,37 @@ public class PexelImageBrowseController implements Initializable {
     }
 
     void arrangeImages() {
-        final double maxWidth = galleryVbox.getWidth();
-        var currentWidth = 0;
-        var hBox = new HBox();
+        final double containerWidth = galleryHbox.getWidth();
+        final int containerCount = (int) (containerWidth / imageWidth);
         var images = imageBuffer.getChildren().toArray();
+
+        List<ImageColumn> containers = new ArrayList<>();
+        for (int i = 0; i < containerCount; i++) {
+            containers.add(new ImageColumn(new VBox(), 0));
+        }
+
         for (Object node : images) {
             var imageView = (ImageView) node;
-            var imageWidth = imageView.layoutBoundsProperty().get().getWidth();
-            if (currentWidth + imageWidth > maxWidth) {
-                galleryVbox.getChildren().add(hBox);
-                currentWidth = 0;
-                hBox = new HBox();
-            }
-            hBox.getChildren().add(imageView);
-            currentWidth += imageWidth;
+            var imageHeight = imageView.layoutBoundsProperty().get().getHeight();
+            var container = containers.stream().min((p1, p2) -> Float.compare(p1.Height, p2.Height)).get();
+            container.Container.getChildren().add(imageView);
+            container.Height += imageHeight;
         }
-        galleryVbox.getChildren().add(hBox);
+        containers.forEach(container -> {
+            container.Container.setSpacing(spacing);
+            galleryHbox.getChildren().add(container.Container);
+            galleryHbox.paddingProperty().set(new Insets(spacing));
+        });
+    }
+
+    private class ImageColumn {
+        public VBox Container;
+        public float Height;
+
+        ImageColumn(VBox container, float height) {
+            Container = container;
+            Height = height;
+        }
+
     }
 }
