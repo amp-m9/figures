@@ -1,52 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<SplitPane dividerPositions="0.6918844566712518" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-           minWidth="-Infinity" prefHeight="592.0" prefWidth="729.0" xmlns="http://javafx.com/javafx/21.0.1"
-           xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="xyz.andrick.figures.controllers.PexelImageBrowseController">
-    <items>
-        <VBox prefHeight="200.0" prefWidth="100.0">
-            <children>
-                <HBox spacing="10.0" VBox.vgrow="NEVER">
-                    <children>
-                        <TextField HBox.hgrow="ALWAYS" fx:id="queryTextField"/>
-                        <Button mnemonicParsing="false" text="search" fx:id="searchButton"/>
-                    </children>
-                    <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                    </padding>
-                </HBox>
-                <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0"
-                            VBox.vgrow="ALWAYS">
-                    <content>
-                        <TilePane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                                  prefHeight="200.0" prefWidth="0.0" tileAlignment="TOP_LEFT" fx:id="resultsTilePane"/>
-                    </content>
-                </ScrollPane>
-            </children>
-        </VBox>
-        <VBox alignment="CENTER" minWidth="-Infinity" prefHeight="200.0" prefWidth="50.0">
-            <children>
-                <HBox alignment="CENTER" prefHeight="44.0" prefWidth="221.0">
-                    <children>
-                        <Label alignment="CENTER" text="Selected" textAlignment="CENTER"/>
-                    </children>
-                </HBox>
-                <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS"/>
-                <HBox alignment="CENTER" spacing="10.0">
-                    <children>
-                        <Button alignment="CENTER" minWidth="-Infinity" mnemonicParsing="false" text="Confirm"
-                                textAlignment="CENTER" HBox.hgrow="ALWAYS"/>
-                    </children>
-                    <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                    </padding>
-                </HBox>
-            </children>
-        </VBox>
-    </items>
-</SplitPane>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="592.0" prefWidth="729.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.andrick.figures.controllers.PexelImageBrowseController">
+      <Pane fx:id="imageBuffer" opacity="0.0" prefHeight="592.0" prefWidth="729.0" />
+    <VBox maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <children>
+            <HBox fx:id="searchHbox" spacing="10.0" VBox.vgrow="NEVER">
+                <children>
+                    <TextField fx:id="queryTextField" HBox.hgrow="ALWAYS" />
+                    <Button fx:id="searchButton" mnemonicParsing="false" text="search" />
+                </children>
+                <padding>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                </padding>
+            </HBox>
+            <ScrollPane fx:id="scrollPane" fitToWidth="true" prefWidth="729.0" style="-fx-background-color: #ffffff;" VBox.vgrow="ALWAYS">
+                <content>
+                    <VBox fx:id="galleryVbox" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    </VBox>
+                </content>
+            </ScrollPane>
+        </children>
+    </VBox>
+</AnchorPane>
