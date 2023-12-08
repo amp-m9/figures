@@ -326,6 +326,9 @@ public class SettingsSceneController implements Initializable {
             FXMLLoader loader = new FXMLLoader(FiguresApplication.class.getResource("pexel-image-select-view.fxml"));
             Parent root = loader.load();
             pexelImageSelectionScene = new Scene(root);
+            var css = FiguresApplication.class.getResource("styles/imageSelect.css");
+            pexelImageSelectionScene.getStylesheets().add(Objects.requireNonNull(css).toExternalForm());
+
             assert pexelImageSelectionScene != null;
             pexelImageBrowseController = loader.getController();
             pexelImageSelectionStage = new Stage();

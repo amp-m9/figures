@@ -25,7 +25,8 @@ import java.util.ResourceBundle;
 
 
 public class PexelImageBrowseController implements Initializable {
-    int imageWidth = 250;
+    int minImageWidth = 200;
+
     int spacing = 10;
     @FXML
     TextField queryTextField;
@@ -34,15 +35,20 @@ public class PexelImageBrowseController implements Initializable {
     @FXML
     HBox searchHbox;
     @FXML
-    ScrollPane scrollPane;
-    @FXML
     HBox galleryHbox;
+    @FXML
+    VBox mainVbox;
+    @FXML
+    ScrollPane scrollPane;
     @FXML
     Pane imageBuffer;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         galleryHbox.setSpacing(spacing);
+        galleryHbox.paddingProperty().set(new Insets(0, 10, 10, 10));
+        VBox.setMargin(scrollPane, new javafx.geometry.Insets(10, 0, 0, 0));
+
         searchButton.setOnAction(this::search);
     }
 
@@ -72,6 +78,7 @@ public class PexelImageBrowseController implements Initializable {
             URLConnection connection = new URL(url).openConnection();
             connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
 
+
             Image image = new Image(connection.getInputStream());
             if (image.isError()) {
                 System.out.println("Error loading image from " + url);
@@ -79,7 +86,7 @@ public class PexelImageBrowseController implements Initializable {
                 continue;
             }
             var imageView = new ImageView(image);
-            imageView.setFitWidth(imageWidth);
+            imageView.setFitWidth(minImageWidth);
             imageView.setFitHeight(0);
             imageView.preserveRatioProperty().set(true);
             imageView.styleProperty().set("-fx-background-color: red");
@@ -89,26 +96,34 @@ public class PexelImageBrowseController implements Initializable {
     }
 
     void arrangeImages() {
-        final double containerWidth = galleryHbox.getWidth();
-        final int containerCount = (int) (containerWidth / imageWidth);
+        final double scrollbarWidth = scrollPane.lookup(".scroll-bar:vertical").getLayoutBounds().getWidth();
+        double containerWidth = mainVbox.getLayoutBounds().getWidth() - 2 * spacing;
+        containerWidth -= scrollbarWidth;
+        final int maxCols = (int) Math.floor(containerWidth / (minImageWidth + spacing));
+        final double colWidth = (containerWidth - (maxCols - 1) * spacing) / maxCols;
+        final int containerCount = (int) (containerWidth / minImageWidth);
+
         var images = imageBuffer.getChildren().toArray();
 
         List<ImageColumn> containers = new ArrayList<>();
         for (int i = 0; i < containerCount; i++) {
-            containers.add(new ImageColumn(new VBox(), 0));
+            var container = new ImageColumn(new VBox(), 0);
+            containers.add(container);
+            container.Container.setSpacing(spacing);
+            container.Container.setMinWidth(colWidth);
+            container.Container.setPrefWidth(colWidth);
+            galleryHbox.getChildren().add(container.Container);
         }
 
-        for (Object node : images) {
-            var imageView = (ImageView) node;
-            var imageHeight = imageView.layoutBoundsProperty().get().getHeight();
-            var container = containers.stream().min((p1, p2) -> Float.compare(p1.Height, p2.Height)).get();
-            container.Container.getChildren().add(imageView);
-            container.Height += imageHeight;
-        }
-        containers.forEach(container -> {
-            container.Container.setSpacing(spacing);
-            galleryHbox.getChildren().add(container.Container);
-            galleryHbox.paddingProperty().set(new Insets(spacing));
+        Platform.runLater(() -> {
+            for (Object node : images) {
+                var imageView = (ImageView) node;
+                imageView.setFitWidth(colWidth);
+                var imageHeight = imageView.layoutBoundsProperty().get().getHeight();
+                var container = containers.stream().min((p1, p2) -> Float.compare(p1.Height, p2.Height)).get();
+                container.Container.getChildren().add(imageView);
+                container.Height += imageHeight;
+            }
         });
     }
 

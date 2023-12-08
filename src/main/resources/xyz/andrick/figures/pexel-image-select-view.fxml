@@ -9,8 +9,8 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="xyz.andrick.figures.controllers.PexelImageBrowseController">
     <Pane fx:id="imageBuffer" opacity="0.0" prefHeight="592.0" prefWidth="729.0"/>
-    <VBox maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" fx:id="mainVbox">
         <children>
             <HBox fx:id="searchHbox" spacing="10.0" VBox.vgrow="NEVER">
                 <children>
@@ -21,8 +21,7 @@
                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                 </padding>
             </HBox>
-            <ScrollPane fx:id="scrollPane" fitToWidth="true" prefWidth="729.0" style="-fx-background-color: #ffffff;"
-                        VBox.vgrow="ALWAYS">
+            <ScrollPane fx:id="scrollPane" fitToWidth="true" prefWidth="729.0" VBox.vgrow="ALWAYS">
                 <content>
                     <HBox fx:id="galleryHbox" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                           AnchorPane.topAnchor="0.0"/>
